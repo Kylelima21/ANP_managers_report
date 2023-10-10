@@ -21,8 +21,8 @@ start <- format(today() - 7, "%d %B %Y")
 end <- format(today()-1, "%d %B %Y")
 
 ## Pull iNaturalist and eBird data
-#inat <- inat_recent("1647", "week", "Acadia National Park")
-#ebird <- ebird_recent("US-ME-009", "Acadia National Park")
+inat <- inat_recent("1647", "week", "Acadia National Park")
+ebird <- ebird_recent("US-ME-009", "Acadia National Park")
 
 ## Make a df with 'groups' to add to the data
 groups <- data.frame(iconic.taxon.name = c("Plantae", "Mammalia", "Animalia", "Aves", "Insecta", 
@@ -33,12 +33,13 @@ groups <- data.frame(iconic.taxon.name = c("Plantae", "Mammalia", "Animalia", "A
                       "Spiders", "Mullusks"))
 
 ## Combine the two data frames
-#final_data <- combine_citsci_data(inat, ebird, join = groups)
+final_data <- combine_citsci_data(inat, ebird, join = groups)
 
 
 ## Run the summary function on the final data
-#watchlist_species(final_data, "email_alerts/outputs")
-#new_npspecies(final_data, "email_alerts/outputs")
+watchlist_species(final_data, "email_alerts/outputs")
+new_npspecies(final_data, "email_alerts/outputs")
+
 
 pests <- read.csv("email_alerts/outputs/invasive_pestslist.csv") %>% 
   select(scientific.name, common.name, user = user.login, observed.on, url) %>% 
@@ -46,6 +47,7 @@ pests <- read.csv("email_alerts/outputs/invasive_pestslist.csv") %>%
          link = map(link, gt::md)) %>%
   select(-url) %>% 
   arrange(common.name, observed.on)
+
 
 rare <- read.csv("email_alerts/outputs/rare_specieslist.csv") %>% 
   select(scientific.name, common.name, observed.on, url) %>% 
@@ -61,6 +63,7 @@ te <- read.csv("email_alerts/outputs/te_specieslist.csv") %>%
          link = map(link, gt::md)) %>%
   select(-url) %>% 
   arrange(common.name, observed.on)
+
 
 newsp <- read.csv("email_alerts/outputs/new_species.csv") %>% 
   select(scientific.name, common.name, observed.on, url) %>% 

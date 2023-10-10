@@ -375,7 +375,7 @@ watchlist_species <- function(x, output.path) {
   ### THREATENED/ENDANGERED
   ## Federal
   # Read in the file and filter for the T, E, and SC species
-  fed_te_sp <- read_csv("email_alerts/datasets/federal_list_maine.csv") %>% 
+  fed_te_sp <- read_csv("email_alerts/www/datasets/federal_list_maine.csv") %>% 
     rename_with(tolower, everything()) %>% 
     select(scientific.name = "scientific name", common.name = "common name",
            listing.status = "esa listing status") %>% 
@@ -387,7 +387,7 @@ watchlist_species <- function(x, output.path) {
   
   ## State
   # Read in the file and filter for the T, E, and SC species
-  state_te_sp <- read_csv("email_alerts/datasets/maine_thrt_end_list.csv") %>% 
+  state_te_sp <- read_csv("email_alerts/www/datasets/maine_thrt_end_list.csv") %>% 
     mutate(level = "state",
            listing.status = tolower(listing.status),
            listing.status = paste0("state ", listing.status)) %>% 
@@ -422,7 +422,7 @@ watchlist_species <- function(x, output.path) {
   
   ## RARE, INVASIVE, PESTS
   # Rare native species list
-  listsp <- read_excel("email_alerts/datasets/acad_watchlist_species.xlsx", .name_repair = custom_name_repair) 
+  listsp <- read_excel("email_alerts/www/datasets/acad_watchlist_species.xlsx", .name_repair = custom_name_repair) 
   
   rares <- listsp %>% 
     filter(status == "rare native" | status == "insect")
@@ -491,7 +491,7 @@ new_npspecies <- function(x, output.path) {
   
   
   # Get the full species list
-  park_sp_list <- read.csv("email_alerts/datasets/acad_species_list.csv")
+  park_sp_list <- read.csv("email_alerts/www/datasets/acad_species_list.csv")
   
   
   # New species according to the NPSpecies list
