@@ -1,9 +1,9 @@
 ---
-title: Report update email
+title: Update report email
 output: blastula::blastula_email
 ---
 
-<link rel="stylesheet" href="email_style.css"/>
+<link rel="stylesheet" href="www/css/email_style.css"/>
 
 ```{r echo = FALSE, include = FALSE}
 library(tidyverse)
@@ -27,7 +27,7 @@ end <- format(today() - 1, "%d %B %Y")
   font-size: 30px;
   font-weight: 700;
   ">
-  Citizen Science: Manager's Report
+  Acadia National Park Manager's Report
   </div>
 
   <div style = "
@@ -49,7 +49,7 @@ end <- format(today() - 1, "%d %B %Y")
   width: 300px;
   border-radius: 5px;
   ">
-  <img src = "img/monarch.jpg" alt = "iNaturalist logo" style = "
+  <img src = "www/img/monarch.jpg" alt = "iNaturalist logo" style = "
   object-fit: cover;
   overflow: hidden;
   ">
@@ -70,7 +70,7 @@ end <- format(today() - 1, "%d %B %Y")
   margin: 60px auto;
   text-align: center;
   ">
-  <a href = "https://kylelima21.github.io/npf_cb_project/" style = "
+  <a href = "https://kylelima21.github.io/ANP_managers_report/" style = "
   position: relative;
   font-size: 20px;
   font-weight: 500;
@@ -94,7 +94,7 @@ end <- format(today() - 1, "%d %B %Y")
   width: 200px;
   border-radius: 5px;
   ">
-  <img src = "img/schoodic_horizontal.jpeg" alt = "Schoodic Institute logo" style = "
+  <img src = "www/img/schoodic_horizontal.jpeg" alt = "Schoodic Institute logo" style = "
   object-fit: cover;
   overflow: hidden;
   ">
