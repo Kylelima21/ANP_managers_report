@@ -1,0 +1,30 @@
+name: Sending NPF Email
+run-name: ${{ github.actor }} is sending the email 🚀
+on:
+  #schedule:
+    #- cron:  '30 12 * * 1'
+    push
+    
+jobs:
+  Run-Email-Sender-Script:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2 # Checkout branch into the runner
+      - uses: r-lib/actions/setup-r@v2-branch # Set up R
+      - uses: r-lib/actions/setup-pandoc@v2 # Set up pandoc for RMD file
+          
+      - name: Install packages
+        run: |
+          R -e 'install.packages("blastula")'
+          R -e 'install.packages("tidyverse")'
+          R -e 'install.packages("lubridate")'
+          
+      - name: Run email script
+        run: Rscript email_alerts/email_sender.R
+      
+      - name: Commit files # Commit changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add .
+          git diff-index --quiet HEAD || (git commit -m "sent weekly email" && git push)
