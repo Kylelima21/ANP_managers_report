@@ -1,0 +1,39 @@
+name: Updating Citizen Science Report
+run-name: ${{ github.actor }} is updating the report!
+on:
+  #schedule:
+    #- cron:  '0 8 * * 1'
+    push:
+    
+jobs:
+  Update-Citsci-Report-Pages:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2 # Checkout branch into the runner
+      - uses: r-lib/actions/setup-r@v2-branch # Set up R
+      - uses: r-lib/actions/setup-pandoc@v2 # Set up pandoc for RMD file
+          
+      - name: Install packages
+        run: |
+          brew install pkg-config
+          brew install gdal
+          R -e 'install.packages("sf")'
+          R -e 'install.packages("tidyverse")'
+          R -e 'install.packages("lubridate")'
+          R -e 'install.packages("kableExtra")'
+          R -e 'install.packages("htmltools")'
+          R -e 'install.packages("rinat")'
+          R -e 'install.packages("rebird")'
+          R -e 'install.packages("gt")'
+          R -e 'install.packages("rgdal")'
+          
+          
+      - name: Run rmd to update info
+        run: Rscript -e 'rmarkdown::render(input = "index.Rmd")'
+      
+      - name: Commit files # Commit changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add .
+          git diff-index --quiet HEAD || (git commit -m "weekly update of citsci report" && git push)
