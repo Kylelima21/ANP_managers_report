@@ -1,0 +1,525 @@
+/* Set core root defaults */
+@import url('https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900');
+
+:root {
+  --clr-base-blue: rgb(146, 206, 208, 1);
+  --clr-base-green: rgb(85, 143, 94, 1);
+  --clr-base-purple: rgba(13, 4, 42, 1);
+
+  --clr-opaque-green: rgb(85, 143, 94, 0.7);
+  --clr-opaque-purple: rgba(13, 4, 42, 0.7);
+
+  --clr-body-boxes: rgba(122, 154, 157, 0.6);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', Sans-Serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+.title, .author {
+  display: none;
+}
+
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+a:focus {
+  outline: 2px solid rgba(255, 255, 255, 1);
+  outline-offset: 3px;
+}
+
+body {
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+  background-image: url("email_alerts/www/img/acad_back.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  overflow-x: hidden;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+.main-container {
+  max-width: 80% !important;
+}
+
+.body-title-box {
+  position: absolute;
+  top: 0;
+  left: 1%;
+  align-items: center;
+  justify-content: left;
+  color: white;
+}
+
+.body-titles {
+  margin-left: 1rem;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.cite {
+  grid-area: images;
+  position: absolute;
+  color: black;
+  font-size: 18px;
+  font-weight: 500;
+  right: 30px;
+  bottom: 15px;
+}
+
+
+
+
+
+
+
+
+/* Title styling*/
+
+.title-box {
+  position: relative;
+  text-align: center; 
+  margin: 15px 0 25vh 0;
+  background-color: var(--clr-opaque-purple);
+  border-radius: 1rem;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+}
+
+.titlemain {
+  color: rgb(255, 255, 255);
+  font-size: 45px; 
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.titlemain2 {
+  color: rgb(255, 255, 255); 
+  font-size: 30px; 
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.subtitle {
+  color: rgb(255, 255, 255); 
+  font-size: 20px; 
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+
+
+
+
+
+/* Intro styling*/
+
+.intro-box {
+  position: relative;
+  background-color: var(--clr-body-boxes);
+  margin: 50px auto;
+  width: 100%;
+  padding: 50px 30px 30px 30px;
+  border-radius: 1rem;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  display: grid;
+  grid-column-gap: 4%;
+  grid-template-columns: 56% 40%;
+  grid-template-areas: 
+    "text theimg"
+}
+
+.ds-text {
+  font-size: 18px;
+  color: rgb(255, 255, 255);
+}
+
+.intro-text {
+  grid-area: text;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  color: black;
+  font-size: 18px;
+}
+
+.intro-img-box {
+  grid-area: theimg;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 1rem;
+  background-color: var(--clr-opaque-green);
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  width: 100%;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-areas: 
+    "inat"
+    "ebird"
+}
+
+.inat-logo {
+  grid-area: inat;
+  position: relative;
+  display: block;
+  margin: 20px auto 0px auto;
+  height: 80px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 2px 2px 1rem rgba(0, 0, 0, 0.4);
+  padding: 2rem 3.5rem;
+  border-radius: 8rem;
+}
+
+.ebird-logo {
+  grid-area: ebird;
+  position: relative;
+  display: block;
+  margin: 20px auto 0px auto;
+  height: 80px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 2px 2px 1rem rgba(0, 0, 0, 0.4);
+  padding: 2rem 3.5rem;
+  border-radius: 8rem;
+}
+
+
+
+
+
+/* Pests box styling */
+
+.pests-box {
+  position: relative;
+  background-color: var(--clr-body-boxes);
+  margin: 50px auto;
+  width: 100%;
+  padding: 50px 30px 30px 30px;
+  border-radius: 1rem;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-areas: 
+    "images"
+    "text"
+}
+
+.pests-img {
+  grid-area: images;
+  max-height: 250px;
+  width: 100%;
+  margin: 20px auto;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.pests-table {
+  grid-area: text;
+  margin: 20px auto auto auto;
+  padding: 20px;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  color: black;
+  font-size: 18px;
+}
+
+
+
+
+
+/* TE box styling */
+
+.te-box {
+  position: relative;
+  background-color: var(--clr-body-boxes);
+  margin: 50px auto;
+  width: 100%;
+  padding: 50px 30px 30px 30px;
+  border-radius: 1rem;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-areas: 
+    "images"
+    "text"
+}
+
+.te-img {
+  grid-area: images;
+  max-height: 250px;
+  width: 100%;
+  margin: 20px auto;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.te-table {
+  grid-area: text;
+  margin: 20px auto auto auto;
+  padding: 20px;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  color: black;
+  font-size: 18px;
+}
+
+
+
+
+
+/* Rare box styling */
+
+.rare-box {
+  position: relative;
+  background-color: var(--clr-body-boxes);
+  margin: 50px auto;
+  width: 100%;
+  padding: 50px 30px 30px 30px;
+  border-radius: 1rem;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-areas: 
+    "images"
+    "text"
+}
+
+.rare-img {
+  grid-area: images;
+  max-height: 250px;
+  width: 100%;
+  margin: 20px auto;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.rare-table {
+  grid-area: text;
+  margin: 20px auto auto auto;
+  padding: 20px;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  color: black;
+  font-size: 18px;
+}
+
+
+
+
+
+
+
+/* New species box styling */
+
+.new-box {
+  position: relative;
+  background-color: var(--clr-body-boxes);
+  margin: 50px auto;
+  width: 100%;
+  padding: 50px 30px 30px 30px;
+  border-radius: 1rem;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-areas: 
+    "images"
+    "text"
+}
+
+.new-img {
+  grid-area: images;
+  max-height: 250px;
+  width: 100%;
+  margin: 20px auto;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.new-table {
+  grid-area: text;
+  margin: 20px auto auto auto;
+  padding: 20px;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  color: black;
+  font-size: 18px;
+}
+
+
+
+
+
+
+
+/* Credits box styling */
+
+.credits-box {
+  position: relative;
+  background-color:  rgba(255, 255, 255, 0.8);
+  border-radius: 1rem;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  margin: 50px auto;
+  width: 100%;
+  padding: 30px;
+  display: grid;
+  grid-column-gap: 2%;
+  grid-template-columns: 38% 60%;
+  grid-template-areas: 
+    "images text"
+}
+
+.schoodic-img {
+  position: relative;
+  grid-area: images;
+  width: 70%;
+  margin-bottom: 15px;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.credits-text {
+  grid-area: text;
+  padding: 10px;
+  text-align: left;
+  color: black;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+
+
+
+
+
+/* Media query styling */
+
+@media screen and (max-width: 1048px) {
+  
+  .main-container {
+    width: 98% !important;
+    max-width: 100% !important;
+  }
+  
+}
+
+
+
+@media screen and (max-width: 880px) {
+  
+  .intro-box {
+    grid-column-gap: none;
+    grid-template-columns: 100%;
+    grid-template-areas: 
+      "text"
+      "theimg"
+  }
+  
+  .intro-img-box {
+    margin-top: 20px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-areas: 
+      "inat ebird"
+  }
+  
+  .inat-logo {
+    margin: auto;
+  }
+  
+  .ebird-logo {
+    margin: auto;
+  }
+  
+  .shrink-table {
+    font-size: 12px;
+  }
+  
+}
+
+
+
+@media screen and (max-width: 600px) {
+  
+  .intro-img-box {
+    grid-template-columns: 100%;
+    grid-template-areas: 
+      "inat"
+      "ebird"
+  }
+  
+  .credits-box {
+    grid-row-gap: 30px;
+    grid-template-columns: 100%;
+    grid-template-areas: 
+      "images"
+      "text"
+  }
+  
+  .inat-logo {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .ebird-logo {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .shrink-table {
+    font-size: 10px;
+  }
+  
+}
+
+
+@media screen and (max-width: 568px) {
+  
+  .te-img {
+    margin: 40px auto 20px auto;
+  }
+  
+  .pests-img {
+    margin: 40px auto 20px auto;
+  }
+  
+}
+
+
+@media screen and (max-width: 450px) {
+  
+  .schoodic-img {
+    width: 100%;
+  }
+  
+}
