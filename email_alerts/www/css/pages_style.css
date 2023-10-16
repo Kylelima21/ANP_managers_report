@@ -203,6 +203,31 @@ ol[role="list"] {
 
 
 
+
+
+
+/* Pests box styling */
+
+.map-box {
+  max-width: 80%;
+  margin: auto;
+  box-shadow: 4px 4px 1rem rgba(0, 0, 0, 0.5), -4px -4px 1rem rgba(0, 0, 0, 0.5);
+}
+
+.html-widget {
+    margin-bottom: 0px !important;
+}
+
+
+
+
+
+
+
+
+
+
+
 /* Pests box styling */
 
 .pests-box {

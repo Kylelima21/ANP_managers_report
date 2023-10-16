@@ -397,19 +397,19 @@ watchlist_species <- function(x, output.path) {
   # All T, E species from the last week
   te_specieslist_federal <- x %>% 
     filter(scientific.name %in% fed_te_sp$scientific.name) %>% 
-    select(scientific.name, common.name, observed.on, place.guess, url) %>% 
+    select(scientific.name, common.name, observed.on, place.guess, latitude, longitude, url) %>% 
     left_join(fed_te_sp, by = "scientific.name") %>% 
     select(scientific.name, common.name = common.name.x, observed.on, location = place.guess, 
-           listing.status, url)
+           listing.status, latitude, longitude, url)
   
   
   # All T, E species from the last week
   te_specieslist_state <- x %>% 
     filter(scientific.name %in% state_te_sp$scientific.name) %>% 
-    select(scientific.name, common.name, observed.on, place.guess, url) %>% 
+    select(scientific.name, common.name, observed.on, place.guess, latitude, longitude, url) %>% 
     left_join(state_te_sp, by = "scientific.name") %>% 
     select(scientific.name, common.name = common.name.x, observed.on, 
-           location = place.guess, listing.status, url)
+           location = place.guess, listing.status, latitude, longitude, url)
   
   # Combine and export
   all_te_sp <- dplyr::bind_rows(te_specieslist_federal, te_specieslist_state) #%>% 
@@ -438,7 +438,7 @@ watchlist_species <- function(x, output.path) {
     filter(scientific.name %in% rares$scientific.name) %>% 
     arrange(desc(observed.on)) %>%
     dplyr::select(scientific.name, common.name, observed.on, 
-                  location = place.guess, url)
+                  location = place.guess, latitude, longitude, url)
   
   
   # Invasives and pests
@@ -502,26 +502,11 @@ new_npspecies <- function(x, output.path) {
     # slice(1) %>% 
     #mutate(link = paste("<a href=", url, " target='_blank'>view record here</a>")) %>% 
     dplyr::select(scientific.name, common.name, location = place.guess, 
-                  observed.on, url)
+                  observed.on, latitude, longitude, url)
   
   
   write.csv(new_species, paste(output.path, "new_species.csv", sep = "/"), row.names = F)
   
-  # # Print summary and write out if appropriate
-  # if(length(new_species$scientific.name) >= 1) {
-  #   write.csv(new_species, paste(output.path, "new_species.csv", sep = "/"))
-  #   message(paste0("Number of new species: ", length(new_species$scientific.name)))
-  # } else {
-  #   message(paste0("Number of new species: ", length(new_species$scientific.name)))
-  # }
-  # 
-  # 
-  # # Final print
-  # if(length(new_species$scientific.name) >= 1) {
-  #   message("Results were saved to designated directory.")
-  # } else {
-  #   message("No results were saved to designated directory as there were 0 new species")
-  # }
   
 }
 
@@ -563,7 +548,7 @@ species_leaflet <- function (x) {
     addProviderTiles(providers$Stamen.TonerLines, options = providerTileOptions(opacity = 0.35)) %>% 
     #addProviderTiles(providers$Stamen.TerrainLabels) %>%
     addProviderTiles(providers$CartoDB.PositronOnlyLabels) %>% 
-    addMarkers(formap$longitude, formap$latitude, label = formap$location,
+    addMarkers(formap$longitude, formap$latitude, label = formap$common.name,
                labelOptions = labelOptions(textsize = "15px"),
                clusterOptions = markerClusterOptions(),
                popup = formap$url) %>%

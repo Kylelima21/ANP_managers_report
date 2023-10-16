@@ -25,11 +25,11 @@ inat <- inat_recent("1647", "week", "Acadia National Park")
 ebird <- ebird_recent("US-ME-009", "Acadia National Park")
 
 ## Make a df with 'groups' to add to the data
-groups <- data.frame(iconic.taxon.name = c("Plantae", "Mammalia", "Animalia", "Aves", "Insecta", 
+groups <- data.frame(iconic.taxon.name = c("Plantae", "Mammalia", "Animalia", "Aves", "Insecta",
                                  "Reptilia", "Amphibia", "Fungi", "Protozoa", "Chromista",
                                  "Arachnida", "Mullusca"),
            groups = c("Plants", "Mammals", "Other animals", "Birds", "Insects", "Reptiles",
-                      "Amphibians", "Fungi and lichens", "Protozoans", "Kelp and seaweeds", 
+                      "Amphibians", "Fungi and lichens", "Protozoans", "Kelp and seaweeds",
                       "Spiders", "Mullusks"))
 
 ## Combine the two data frames
@@ -41,8 +41,9 @@ watchlist_species(final_data, "email_alerts/outputs")
 new_npspecies(final_data, "email_alerts/outputs")
 
 
+## Read in the outputs from the watchlist + new npspecies functions and format for tables
 pests <- read.csv("email_alerts/outputs/invasive_pestslist.csv") %>% 
-  select(scientific.name, common.name, user = user.login, observed.on, url) %>% 
+  select(scientific.name, common.name, observed.on, url) %>% 
   mutate(link = glue::glue("[view observation]({url})"),
          link = map(link, gt::md)) %>%
   select(-url) %>% 
@@ -71,6 +72,24 @@ newsp <- read.csv("email_alerts/outputs/new_species.csv") %>%
          link = map(link, gt::md)) %>%
   select(-url) %>% 
   arrange(common.name, observed.on)
+
+
+## Clean dataframes and combine to map all obs
+mappest <- read.csv("email_alerts/outputs/invasive_pestslist.csv") %>% 
+  select(scientific.name, common.name, latitude, longitude, url) 
+
+maprare <- read.csv("email_alerts/outputs/rare_specieslist.csv") %>% 
+  select(scientific.name, common.name, latitude, longitude, url) 
+
+mapte <- read.csv("email_alerts/outputs/te_specieslist.csv") %>% 
+  select(scientific.name, common.name, latitude, longitude, url) 
+
+mapnew <- read.csv("email_alerts/outputs/new_species.csv") %>% 
+  select(scientific.name, common.name, latitude, longitude, url) 
+
+
+mapcomb <- rbind(mappest, maprare, mapte, mapnew)
+  
 
 ```
 
@@ -104,6 +123,15 @@ newsp <- read.csv("email_alerts/outputs/new_species.csv") %>%
   Welcome to the weekly report of iNaturalist and eBird records. These are all observations submitted during the last week for species that Acadia National Park managers have identified as being of management interest. 
   
   These data for this report comes from two of the largest open source citizen science projects: iNaturalist and eBird. The records here are both casual and research grade observations, so erroneous identifications are possible.
+  </div>
+</div>
+
+
+
+<!-- Observations Map -->
+<div class = "map-box">
+  <div>
+  `r leaflet_summary(mapcomb)`
   </div>
 </div>
 
