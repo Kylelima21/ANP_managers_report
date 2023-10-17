@@ -585,7 +585,7 @@ leaflet_summary <- function (x) {
   
   map <- leaflet(options = leafletOptions(zoomControl = FALSE)) %>% 
     addProviderTiles(providers$Esri.WorldImagery) %>% 
-    addProviderTiles(providers$Stamen.TonerLines, options = providerTileOptions(opacity = 0.35)) %>% 
+    #addProviderTiles(providers$Stadia.StamenTonerLines, options = providerTileOptions(opacity = 0.35)) %>% 
     #addProviderTiles(providers$Stamen.TerrainLabels) %>%
     addProviderTiles(providers$CartoDB.PositronOnlyLabels) %>% 
     addMarkers(formap$longitude, formap$latitude, label = formap$common.name,
