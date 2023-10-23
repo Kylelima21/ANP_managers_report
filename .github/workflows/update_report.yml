@@ -25,6 +25,7 @@ jobs:
           R -e 'install.packages("rebird")'
           R -e 'install.packages("gt")'
           R -e 'install.packages("rgdal")'
+          R -e 'install.packages("leaflet")'
           
           
       - name: Run rmd to update info
