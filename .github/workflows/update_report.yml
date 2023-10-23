@@ -1,4 +1,4 @@
-name: Updating Citizen Science Report
+name: Updating Managers Report
 run-name: ${{ github.actor }} is updating the report!
 on:
   #schedule:
