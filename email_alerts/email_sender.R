@@ -34,18 +34,21 @@ library(blastula)
 
 
 ## Produce and send the email
-smtp_send(render_email('email_alerts/email_material.Rmd'),
-          from = "klima@schoodicinstitute.org",
-          to = c("klima@schoodicinstitute.org",
+smtp_send(render_email('email_alerts/email_material.Rmd'), 
+          from = "klima@schoodicinstitute.org", 
+          to = c("klima@schoodicinstitute.org", 
+                 "abe_miller-rushing@nps.gov", 
                  "nfisichelli@schoodicinstitute.org", 
-                 "Jesse_Wheeler@nps.gov", 
-                 "hwebber@schoodicinstitute.org",
+                 "jesse_wheeler@nps.gov", 
+                 "rebecca_cole-will@nps.gov",
+                 "bik_wheeler@nps.gov", 
+                 "hwebber@schoodicinstitute.org", 
                  "sbenz@schoodicinstitute.org", 
                  "cnadeau@schoodicinstitute.org", 
                  "hmittelstaedt@schoodicinstitute.org", 
-                 "cschmitt@schoodicinstitute.org",
-                 "sobrien@schoodicinstitute.org"),
-          subject = "Acadia National Park Citizen Science Report",
+                 "cschmitt@schoodicinstitute.org", 
+                 "sobrien@schoodicinstitute.org"), 
+          subject = "Acadia National Park Citizen Science Report", 
           credentials = creds_file("email_alerts/kmail")
 )
 
