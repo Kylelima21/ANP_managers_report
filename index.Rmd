@@ -97,7 +97,7 @@ mapcomb <- rbind(mappest, maprare, mapte, mapnew)
 <!-- Header -->
 <div class = "title-box">
   <div class = "titlemain">
-  Acadia National Park Manager's Report
+  Acadia National Park Managers' Report
   </div>
   <div class = "titlemain2">
   From citizen science observations
