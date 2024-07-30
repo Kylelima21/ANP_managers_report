@@ -98,8 +98,6 @@ inat_recent <- function(place_id, timespan, parkname) {
                  month = obs_month, 
                  maxresults = 10000) %>% 
       as_tibble() %>% 
-      select(scientific_name, common_name, iconic_taxon_name, observed_on, place_guess, 
-             latitude, longitude, positional_accuracy, user_login, user_id, captive_cultivated, url, image_url, license) %>% 
       mutate(common_name = tolower(common_name)) %>% 
       rename_all( ~ str_replace_all(., "_", "."))
     
@@ -199,8 +197,9 @@ ebird_recent <- function(ebird_loc, parkname) {
   mid <- map2_dfr(ebird_loc, codelist, run) %>% 
     mutate(iconic.taxon.name = "Aves",
            obsDt = as.Date(obsDt)) %>% 
-    select(scientific.name = sciName, common.name = comName, iconic.taxon.name, count = howMany,
-           observed.on = obsDt, place.guess = locName, latitude = lat, longitude = lng, checklist = subId, url)
+    rename(scientific.name = sciName, common.name = comName, count = howMany,
+           observed.on = obsDt, place.guess = locName, latitude = lat, 
+           longitude = lng, checklist = subId)
   
   
   # Select records inside the designated area
@@ -597,4 +596,161 @@ leaflet_summary <- function (x) {
   return(map)
   
 }
+
+
+
+#' Function summarizes iNaturalist observations for watchlist species
+#'
+#' Threatened and endangered species (state and federal)
+#'
+#' @inheritParams None
+#' @return A data frame of filtered iNaturalist observations.
+#' @param x: Data frame of iNaturalist observations.
+#' @seealso None
+#' @export
+
+watchlist_te <- function(x) {
+  
+  # Stop this output from showing
+  options(readr.show_col_types = FALSE)
+  
+  
+  # Custom name repair function to be used later
+  custom_name_repair <- function(x) { tolower(gsub(" ", ".", x)) }
+  
+  
+  ### THREATENED/ENDANGERED
+  ## Federal
+  # Read in the file and filter for the T, E, and SC species
+  fed_te_sp <- read_csv("email_alerts/www/datasets/federal_list_maine.csv") %>% 
+    rename_with(tolower, everything()) %>% 
+    select(scientific.name = "scientific name", common.name = "common name",
+           listing.status = "esa listing status") %>% 
+    mutate(level = "federal",
+           listing.status = tolower(listing.status),
+           listing.status = paste0("federally ", listing.status)) %>% 
+    dplyr::select(-level)
+  
+  
+  ## State
+  # Read in the file and filter for the T, E, and SC species
+  state_te_sp <- read_csv("email_alerts/www/datasets/maine_thrt_end_list.csv") %>% 
+    mutate(level = "state",
+           listing.status = tolower(listing.status),
+           listing.status = paste0("state ", listing.status)) %>% 
+    dplyr::select(-level)
+  
+  
+  # All T, E species federal
+  te_specieslist_federal <- x %>% 
+    filter(scientific.name %in% fed_te_sp$scientific.name) %>% 
+    left_join(fed_te_sp, by = "scientific.name")
+  
+  
+  # All T, E species state
+  te_specieslist_state <- x %>% 
+    filter(scientific.name %in% state_te_sp$scientific.name) %>%
+    left_join(state_te_sp, by = "scientific.name")
+  
+  
+  # Combine and export
+  all_te_sp <- dplyr::bind_rows(te_specieslist_federal, te_specieslist_state) %>% 
+    rename(common.name = common.name.x) %>% 
+    select(-common.name.y) %>% 
+    as_tibble()
+  
+  
+  return(all_te_sp)
+  
+}
+
+
+
+
+#' Function summarizes iNaturalist observations for watchlist species
+#'
+#' Rare or declining native species
+#'
+#' @inheritParams None
+#' @return A data frame of filtered iNaturalist observations.
+#' @param x: Data frame of iNaturalist observations.
+#' @seealso None
+#' @export
+
+watchlist_rn <- function(x) {
+  
+  # Stop this output from showing
+  options(readr.show_col_types = FALSE)
+  
+  
+  # Custom name repair function to be used later
+  custom_name_repair <- function(x) { tolower(gsub(" ", ".", x)) }
+  
+  
+  ## RARE
+  # Rare native species list
+  listsp <- read_excel("email_alerts/www/datasets/acad_watchlist_species.xlsx", .name_repair = custom_name_repair) 
+  
+  rares <- listsp %>% 
+    filter(status == "rare native" | status == "insect")
+  
+  
+  # Native but rare
+  rares_obs <- x %>% 
+    filter(scientific.name %in% rares$scientific.name) %>% 
+    mutate(listing.status = "rare native") %>% 
+    as_tibble()
+  
+  
+  return(rares_obs)
+  
+}
+
+
+
+
+
+#' Function summarizes iNaturalist observations for watchlist species
+#'
+#' Invasives, pests, and diseases
+#'
+#' @inheritParams None
+#' @return A data frame of filtered iNaturalist observations.
+#' @param x: Data frame of iNaturalist observations.
+#' @seealso None
+#' @export
+
+watchlist_inv <- function(x) {
+  
+  # Stop this output from showing
+  options(readr.show_col_types = FALSE)
+  
+  
+  # Custom name repair function to be used later
+  custom_name_repair <- function(x) { tolower(gsub(" ", ".", x)) }
+  
+  
+  ## INVASIVE, PESTS
+  # Rare native species list
+  listsp <- read_excel("email_alerts/www/datasets/acad_watchlist_species.xlsx", .name_repair = custom_name_repair) 
+  
+  invasive_ne <- listsp %>% 
+    filter(status == "invasive not established" |
+             status == "invasive established" |
+             status == "pest disease")
+  
+  
+  # Invasives and pests
+  invasive_obs <- x %>% 
+    filter(scientific.name %in% invasive_ne$scientific.name) %>% 
+    mutate(listing.status = "invasive/pest/disease") %>% 
+    as_tibble()
+  
+  
+  return(invasive_obs)
+  
+}
+
+
+
 

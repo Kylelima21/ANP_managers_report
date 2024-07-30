@@ -402,6 +402,50 @@ ol[role="list"] {
 
 
 
+/* Data download styling */
+
+.downloader-box {
+  position: relative;
+  background-color: var(--clr-body-boxes);
+  margin: 50px auto;
+  width: 100%;
+  padding: 50px 30px 30px 30px;
+  border-radius: 1rem;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  display: grid;
+  grid-template-columns: 50%;
+  grid-template-areas: 
+    "inatbutton ebdbutton"
+}
+
+.btn {
+  position: relative;
+  display: block;
+  margin: 10px auto 0px auto;
+  padding: 9px 15px;
+}
+
+.button {
+  align-content: center;
+}
+
+.dlb {
+  display: grid;
+}
+
+.inatbut {
+  grid-area: inatbutton;
+}
+
+.ebdbut {
+  grid-area: ebdbutton;
+}
+
+.btn-success {
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+}
+
+
 
 
 /* Credits box styling */
@@ -492,6 +536,26 @@ ol[role="list"] {
   
 }
 
+
+
+@media screen and (max-width: 700px) {
+
+  .downloader-box {
+     grid-template-columns: 100%;
+     grid-template-areas: 
+       "inatbutton"
+       "ebdbutton"
+  }
+  
+  .inat-logo {
+    margin-top: 20px;
+  }
+  
+  .ebird-logo {
+    margin-top: 40px;
+  }
+
+}
 
 
 @media screen and (max-width: 600px) {

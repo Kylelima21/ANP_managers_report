@@ -47,3 +47,9 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+
+## iNat and eBird databases
+database_creation/full_inat_obs_20240715.csv
+database_creation/ebd_US-ME_relMay-2024.txt
+

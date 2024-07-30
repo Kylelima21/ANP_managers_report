@@ -15,6 +15,7 @@ library(kableExtra)
 library(htmltools)
 library(sf)
 library(gt)
+library(downloadthis)
 source("email_alerts/email_functions.R")
 
 start <- format(today() - 7, "%d %B %Y")
@@ -23,6 +24,29 @@ end <- format(today()-1, "%d %B %Y")
 ## Pull iNaturalist and eBird data
 inat <- inat_recent("1647", "week", "Acadia National Park")
 ebird <- ebird_recent("US-ME-009", "Acadia National Park")
+
+
+## Run the three function and combine rows for iNaturalist
+inat_twf <- bind_rows(inat %>% watchlist_inv(), inat %>% watchlist_te(),
+                         inat %>% watchlist_rn()) %>% 
+  mutate(observed.on = as.character(observed.on))
+
+## Run the three function and combine rows for eBird
+ebd_twf <- bind_rows(ebird %>% watchlist_inv(), ebird %>% watchlist_te(),
+                      ebird %>% watchlist_rn())
+
+
+## Add to the full database and export
+read.csv("email_alerts/www/datasets/inat_fulldata.csv") %>% 
+  bind_rows(inat_twf) %>% 
+  select(-c(datetime:count)) %>% 
+  write.csv(., "email_alerts/www/datasets/inat_fulldata.csv", row.names = F)
+
+read.csv("email_alerts/www/datasets/ebd_fulldata.csv") %>% 
+  bind_rows(ebd_twf) %>% 
+  select(-c(speciesCode:license)) %>% 
+  write.csv(., "email_alerts/www/datasets/ebd_fulldata.csv", row.names = F)
+
 
 ## Make a df with 'groups' to add to the data
 groups <- data.frame(iconic.taxon.name = c("Plantae", "Mammalia", "Animalia", "Aves", "Insecta",
@@ -33,7 +57,15 @@ groups <- data.frame(iconic.taxon.name = c("Plantae", "Mammalia", "Animalia", "A
                       "Spiders", "Mullusks"))
 
 ## Combine the two data frames
-final_data <- combine_citsci_data(inat, ebird, join = groups)
+final_data <- combine_citsci_data(
+  inat %>% 
+    select(scientific.name, common.name, iconic.taxon.name, observed.on, 
+           place.guess, latitude, longitude, positional.accuracy, user.login, 
+           user.id, captive.cultivated, url, image.url, license), 
+  ebird %>% 
+    select(scientific.name, common.name, iconic.taxon.name, count, observed.on, 
+           place.guess, latitude, longitude, checklist, url), 
+  join = groups)
 
 
 ## Run the summary function on the final data
@@ -188,6 +220,41 @@ mapcomb <- rbind(mappest, maprare, mapte, mapnew)
   <h5 class = "cite"> © Kyle Lima </h5>
   <div class = "rare-table shrink-table">
   `r ifelse(length(newsp$scientific.name) > 0, kbl(newsp) %>% kable_styling(bootstrap_options = "hover"), paste0("<h3> There were no new species to the park reported this week. </h3>"))`
+  </div>
+</div>
+
+
+
+<!-- Download -->
+<div class = "downloader-box">
+  <div class = "body-title-box">
+  <h4 class = "body-titles"> Download Full Datasets </h4>
+  </div>
+  <div class = "dlb">
+  <a href = "https://www.inaturalist.org/"><img src = "email_alerts/www/img/inat.png" alt = "iNaturalist    logo" class = "inat-logo"></a>
+``` {r echo = FALSE, class.output = "inatbut"}
+read.csv("email_alerts/www/datasets/inat_fulldata.csv") %>%
+  download_this(
+    output_name = "iNaturalist_watchlist_database",
+    output_extension = ".xlsx",
+    button_label = "Download iNaturalist data",
+    button_type = "success",
+    has_icon = TRUE,
+    icon = "fa fa-save")
+```
+  </div>
+  <div class = "dlb">
+  <a href = "https://ebird.org/"><img src = "email_alerts/www/img/ebird.png" alt = "eBird logo" class =     "ebird-logo"></a>
+``` {r echo = FALSE, class.output = "ebdbut"}
+read.csv("email_alerts/www/datasets/ebd_fulldata.csv") %>%
+  download_this(
+    output_name = "eBird_watchlist_database",
+    output_extension = ".xlsx",
+    button_label = "Download eBird data",
+    button_type = "success",
+    has_icon = TRUE,
+    icon = "fa fa-save")
+```
   </div>
 </div>
 
