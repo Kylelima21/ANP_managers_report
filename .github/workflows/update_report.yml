@@ -26,6 +26,7 @@ jobs:
           R -e 'install.packages("gt")'
           R -e 'install.packages("rgdal")'
           R -e 'install.packages("leaflet")'
+          R -e 'install.packages("downloadthis")'
           
           
       - name: Run rmd to update info
