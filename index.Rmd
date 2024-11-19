@@ -37,15 +37,19 @@ ebd_twf <- bind_rows(ebird %>% watchlist_inv(), ebird %>% watchlist_te(),
 
 
 ## Add to the full database and export
+if(nrow(inat_twf) > 0) {
 read.csv("email_alerts/www/datasets/inat_fulldata.csv") %>% 
   bind_rows(inat_twf) %>% 
   select(-c(datetime:count)) %>% 
   write.csv(., "email_alerts/www/datasets/inat_fulldata.csv", row.names = F)
+}
 
+if(nrow(ebd_twf) > 0) {
 read.csv("email_alerts/www/datasets/ebd_fulldata.csv") %>% 
   bind_rows(ebd_twf) %>% 
   select(-c(speciesCode:license)) %>% 
   write.csv(., "email_alerts/www/datasets/ebd_fulldata.csv", row.names = F)
+}
 
 
 ## Make a df with 'groups' to add to the data
