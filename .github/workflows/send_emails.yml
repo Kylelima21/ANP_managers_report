@@ -12,12 +12,12 @@ jobs:
           
       - name: Install packages
         run: |
+          brew reinstall pkgconf
           R -e 'install.packages("blastula")'
           R -e 'install.packages("digest")'
           R -e 'install.packages("tidyverse")'
           R -e 'install.packages("lubridate")'
-          brew unlink qscintilla2
-          brew install qscintilla2.rb
+
           
       - name: Run email script
         run: Rscript email_alerts/email_sender.R
