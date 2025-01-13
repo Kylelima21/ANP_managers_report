@@ -1,8 +1,6 @@
 name: Sending NPF Email
 run-name: ${{ github.actor }} is sending the email 🚀
-on:
-  schedule: push
-    #- cron:  '30 12 * * 1'
+on: push
     
 jobs:
   Run-Email-Sender-Script:
