@@ -12,8 +12,8 @@ jobs:
           
       - name: Install packages
         run: |
-          brew update homebrew
-          brew update pkgconf
+          brew reinstall homebrew
+          brew reinstall pkgconf
           R -e 'install.packages("blastula")'
           R -e 'install.packages("digest")'
           R -e 'install.packages("tidyverse")'
