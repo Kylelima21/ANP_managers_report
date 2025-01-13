@@ -12,10 +12,7 @@ jobs:
           
       - name: Install packages
         run: |
-          brew reinstall homebrew
-          brew reinstall pkgconf
           R -e 'install.packages("blastula")'
-          R -e 'install.packages("digest")'
           R -e 'install.packages("tidyverse")'
           R -e 'install.packages("lubridate")'
 
