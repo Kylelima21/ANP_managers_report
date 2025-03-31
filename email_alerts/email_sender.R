@@ -48,7 +48,7 @@ smtp_send(render_email('email_alerts/email_material.Rmd'),
                  "cschmitt@schoodicinstitute.org",
                  "sobrien@schoodicinstitute.org",
                  "ealbee@schoodicinstitute.org",
-                 "acarey@schoodicinstitute.org"),
+                 "earlycareer@schoodicinstitute.org"),
           subject = "Acadia National Park Citizen Science Report", 
           credentials = creds_file("email_alerts/kmail")
 )
