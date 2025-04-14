@@ -574,24 +574,35 @@ species_leaflet <- function (x) {
 
 leaflet_summary <- function (x) {
   
-  formap <- x %>% 
-    mutate(url = paste0("<b><a href='", url, "' target='_blank' rel='noopener noreferrer'", ">View observation here</a></b>")) 
+  if (nrow(x) == 0) {
+    map <- leaflet(options = leafletOptions(zoomControl = FALSE)) %>% 
+      addProviderTiles(providers$Esri.WorldImagery) %>% 
+      #addProviderTiles(providers$Stadia.StamenTonerLines, options = providerTileOptions(opacity = 0.35)) %>% 
+      #addProviderTiles(providers$Stamen.TerrainLabels) %>%
+      addProviderTiles(providers$CartoDB.PositronOnlyLabels)
+  }
   
-  maxLong = max(formap$longitude) + 0.1
-  maxLat = max(formap$latitude) + 0.1
-  minLong = min(formap$longitude) - 0.1
-  minLat = min(formap$latitude) - 0.1
-  
-  map <- leaflet(options = leafletOptions(zoomControl = FALSE)) %>% 
-    addProviderTiles(providers$Esri.WorldImagery) %>% 
-    #addProviderTiles(providers$Stadia.StamenTonerLines, options = providerTileOptions(opacity = 0.35)) %>% 
-    #addProviderTiles(providers$Stamen.TerrainLabels) %>%
-    addProviderTiles(providers$CartoDB.PositronOnlyLabels) %>% 
-    addMarkers(formap$longitude, formap$latitude, label = formap$common.name,
-               labelOptions = labelOptions(textsize = "15px"),
-               clusterOptions = markerClusterOptions(),
-               popup = formap$url) %>%
-    fitBounds(minLong, minLat, maxLong, maxLat)
+  if (nrow(x) > 0) {
+    
+    formap <- x %>% 
+      mutate(url = paste0("<b><a href='", url, "' target='_blank' rel='noopener noreferrer'", ">View observation here</a></b>")) 
+    
+    maxLong = max(formap$longitude) + 0.1
+    maxLat = max(formap$latitude) + 0.1
+    minLong = min(formap$longitude) - 0.1
+    minLat = min(formap$latitude) - 0.1
+    
+    map <- leaflet(options = leafletOptions(zoomControl = FALSE)) %>% 
+      addProviderTiles(providers$Esri.WorldImagery) %>% 
+      #addProviderTiles(providers$Stadia.StamenTonerLines, options = providerTileOptions(opacity = 0.35)) %>% 
+      #addProviderTiles(providers$Stamen.TerrainLabels) %>%
+      addProviderTiles(providers$CartoDB.PositronOnlyLabels) %>% 
+      addMarkers(formap$longitude, formap$latitude, label = formap$common.name,
+                 labelOptions = labelOptions(textsize = "15px"),
+                 clusterOptions = markerClusterOptions(),
+                 popup = formap$url) %>%
+      fitBounds(minLong, minLat, maxLong, maxLat)
+  }
   
   return(map)
   
