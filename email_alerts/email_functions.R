@@ -766,25 +766,25 @@ watchlist_inv <- function(x) {
 
 
 ## Buffer zone stuff in development: ####
-acad.bounds <- sf::read_sf("email_alerts/www/acad_boundary/ACAD_ParkBoundary_PY_202004.shp") %>% 
-  st_transform(4326)
-
-acad.bounds_union <- acad.bounds %>%
-  st_union()
-
-acad.bounds_union_proj <- acad.bounds_union %>%
-  st_transform(32619)
-
-distance_meters <- 10 * 1609.34 # 30 miles in meters
-
-acad.bounds_enlarged_proj <- acad.bounds_union_proj %>%
-  st_buffer(dist = distance_meters)
-
-acad.bounds_enlarged_wgs84 <- acad.bounds_enlarged_proj %>%
-  st_transform(4326)
-
-plot(st_geometry(acad.bounds_enlarged_wgs84), col = "lightblue", main = "Enlarged Park Boundary")
-plot(st_geometry(acad.bounds_union), add = TRUE, col = "red", border = "red", lwd = 2)
-  
+# acad.bounds <- sf::read_sf("email_alerts/www/acad_boundary/ACAD_ParkBoundary_PY_202004.shp") %>% 
+#   st_transform(4326)
+# 
+# acad.bounds_union <- acad.bounds %>%
+#   st_union()
+# 
+# acad.bounds_union_proj <- acad.bounds_union %>%
+#   st_transform(32619)
+# 
+# distance_meters <- 10 * 1609.34 # 30 miles in meters
+# 
+# acad.bounds_enlarged_proj <- acad.bounds_union_proj %>%
+#   st_buffer(dist = distance_meters)
+# 
+# acad.bounds_enlarged_wgs84 <- acad.bounds_enlarged_proj %>%
+#   st_transform(4326)
+# 
+# plot(st_geometry(acad.bounds_enlarged_wgs84), col = "lightblue", main = "Enlarged Park Boundary")
+# plot(st_geometry(acad.bounds_union), add = TRUE, col = "red", border = "red", lwd = 2)
+#   
 
 
