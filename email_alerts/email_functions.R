@@ -91,7 +91,7 @@ inat_recent <- function(place_id, timespan, parkname) {
       unlist() %>% 
       str_remove(., "^\\d*\\-")
     
-    get_inat_obs(quality = "research",
+    get_inat_obs(#quality = "research",
                  place_id = place_id,
                  geo = TRUE,
                  year = obs_year, 
@@ -269,7 +269,7 @@ combine_citsci_data <- function(x, y, join) {
 #' bird.dat <- read.csv("ebird_mappingloc_20220217.csv")
 #'
 #' # Use filter_nps function to filter the bird.dat data frame to records inside Acadia National Park
-#' bird.anp <- filter_nps(bird.dat, "Acadia National ParK", lat = "y", long = "x")
+#' bird.anp <- filter_nps(bird.dat, "Acadia National Park", lat = "y", long = "x")
 #'
 #' @export
 
