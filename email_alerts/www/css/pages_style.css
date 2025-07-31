@@ -1,5 +1,5 @@
 /* Set core root defaults */
-@import url('https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
 
 :root {
   --clr-base-blue: rgb(146, 206, 208, 1);
@@ -10,12 +10,13 @@
   --clr-opaque-purple: rgba(13, 4, 42, 0.7);
 
   --clr-body-boxes: rgba(122, 154, 157, 0.6);
+  --clr-footer: rgb(240,244,250);
 }
 
 * {
-  margin: 0;
+  margin: 0 !important;
   padding: 0;
-  font-family: 'Poppins', Sans-Serif;
+  font-family: 'Montserrat', Sans-Serif !important;
 }
 
 *,
@@ -23,10 +24,6 @@
 *::after {
   box-sizing: border-box;
   scroll-behavior: smooth;
-}
-
-.title, .author {
-  display: none;
 }
 
 html:focus-within {
@@ -40,13 +37,15 @@ a:focus {
 
 body {
   text-rendering: optimizeSpeed;
-  line-height: 1.5;
   background-image: url("email_alerts/www/img/acad_back.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
-  overflow-x: hidden;
+  line-height: 1.5;
+  position: relative;
+  overflow-x: clip;
+  background-color: var(--clr-base-purple);
 }
 
 ul[role="list"],
@@ -54,8 +53,48 @@ ol[role="list"] {
   list-style: none;
 }
 
+.container-fluid {
+  padding: 0 !important;
+}
+
+.title, .author {
+  display: none;
+}
+
+ul {
+  font-size: 1.6rem;
+}
+
+p {
+  font-size: 1.6rem;
+}
+
+.h1, h1 {
+  letter-spacing: 1px;
+  font-size: 5.5rem !important;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.h2, h2 {
+  font-size: 3rem;
+  font-weight: 600;
+}
+
+.h3, h3 {
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
 .main-container {
-  max-width: 80% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.custbody {
+  padding: 10.5rem;
+  width: 100vw;
+  margin: 0 auto;
 }
 
 .body-title-box {
@@ -89,19 +128,61 @@ ol[role="list"] {
 
 
 
+/* || SCROLL TO TOP BUTTON */
+
+.scrolltotop {
+  right: 2.7rem; 
+  bottom: 2rem; 
+  width: 4.5rem;
+  position: fixed;
+  z-index: 1000;
+}
+
+.sttan {
+  opacity: 0;
+  animation: fade-in linear forwards;
+  animation-timeline: view();
+  animation-range: 10rem 50rem;
+}
+
+@keyframes fade-in {
+  to {opacity: 1;}
+}
+
+
+
+
+
+
+
+
+
+
 
 /* Title styling*/
 
-.title-box {
+/*.title-box {
   position: relative;
   text-align: center; 
-  margin: 15px 0 25vh 0;
+  margin: 0 0 25vh 0;
   background-color: var(--clr-opaque-purple);
-  border-radius: 1rem;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+}*/
+
+.title-box {
+  position: relative;
+  padding: 10rem 5rem 5rem 5rem;
+  margin-bottom: 10rem;
+  width: 100vw;
+  background-image: linear-gradient(
+    to left, var(--clr-opaque-purple), var(--clr-base-purple));
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: cover;
   box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
 }
 
-.titlemain {
+/*.titlemain {
   color: rgb(255, 255, 255);
   font-size: 45px; 
   font-weight: 600;
@@ -120,6 +201,37 @@ ol[role="list"] {
   font-size: 20px; 
   font-weight: 500;
   margin-bottom: 10px;
+}*/
+
+.title-text-box {
+  max-width: 90vw;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  row-gap: 2rem;
+  display: flex;
+  color: white;
+}
+
+.header-text {
+  color: white;
+}
+
+.headerp {
+  font-size: 2rem !important;
+  padding: 4rem 5rem 4rem 0;
+  max-width: 70vw;
+}
+
+.header-date {
+  color: black;
+  font-size: 1.8rem !important;
+  font-style: italic;
+  padding: .3rem 1.5rem;
+  margin-top: 2rem;
+  border-radius: 3rem;
+  background-color: var(--clr-base-blue);
+  box-shadow: 2px 2px 1rem rgba(0, 0, 0, 0.5);
 }
 
 
@@ -179,7 +291,7 @@ ol[role="list"] {
   grid-area: inat;
   position: relative;
   display: block;
-  margin: 20px auto 0px auto;
+  margin: 0 auto 2rem auto !important;
   height: 80px;
   background-color: rgb(255, 255, 255);
   box-shadow: 2px 2px 1rem rgba(0, 0, 0, 0.4);
@@ -191,7 +303,7 @@ ol[role="list"] {
   grid-area: ebird;
   position: relative;
   display: block;
-  margin: 20px auto 0px auto;
+  margin: 0 auto 2rem auto !important;
   height: 80px;
   background-color: rgb(255, 255, 255);
   box-shadow: 2px 2px 1rem rgba(0, 0, 0, 0.4);
@@ -206,7 +318,51 @@ ol[role="list"] {
 
 
 
-/* Pests box styling */
+
+/* Map box styling */
+.map-box {
+  position: relative;
+  border-radius: 1rem;
+  padding: 60px 30px 30px 30px;
+  background-color: var(--clr-body-boxes);
+  box-shadow: 4px 4px 1rem rgba(0, 0, 0, 0.5), -4px -4px 1rem rgba(0, 0, 0, 0.5);
+  margin: auto 10rem 5rem 10rem !important;
+}
+
+.boxtitles {
+  margin-bottom: 2rem !important;
+  margin-top: 1rem !important;
+  color: white;
+}
+
+.html-widget {
+  width: 100%;
+  aspect-ratio: 3 / 3;
+  margin: 0 auto;
+  border-radius: 1rem;
+  max-width: 100vw;
+  margin-bottom: 0px !important;
+  margin-top: 2rem;
+}
+
+.leaflet-popup-content {
+  margin: 13px 19px !important;
+}
+
+.leaflet-popup-tip {
+  margin: -10px auto 0 !important;
+}
+
+.leaflet-popup-tip-container {
+  margin: 10px 0 0 -8px !important;
+}
+
+.leaflet-popup-content-wrapper {
+  margin: 0 0 -10px 10px !important;
+}
+
+
+/* Map box styling
 
 .map-box {
   max-width: 80%;
@@ -217,7 +373,7 @@ ol[role="list"] {
 .html-widget {
     margin-bottom: 0px !important;
 }
-
+*/
 
 
 
@@ -233,9 +389,9 @@ ol[role="list"] {
 .pests-box {
   position: relative;
   background-color: var(--clr-body-boxes);
-  margin: 50px auto;
+  margin: 0 auto 5rem auto !important;
   width: 100%;
-  padding: 50px 30px 30px 30px;
+  padding: 60px 30px 30px 30px;
   border-radius: 1rem;
   box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
   display: grid;
@@ -249,7 +405,6 @@ ol[role="list"] {
   grid-area: images;
   max-height: 250px;
   width: 100%;
-  margin: 20px auto;
   box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
   object-fit: cover;
   overflow: hidden;
@@ -258,7 +413,7 @@ ol[role="list"] {
 
 .pests-table {
   grid-area: text;
-  margin: 20px auto auto auto;
+  margin-top: 4rem !important;
   padding: 20px;
   border-radius: 1rem;
   background-color: rgba(255, 255, 255, 0.8);
@@ -276,9 +431,9 @@ ol[role="list"] {
 .te-box {
   position: relative;
   background-color: var(--clr-body-boxes);
-  margin: 50px auto;
+  margin: 0 auto 5rem auto !important;
   width: 100%;
-  padding: 50px 30px 30px 30px;
+  padding: 60px 30px 30px 30px;
   border-radius: 1rem;
   box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
   display: grid;
@@ -301,7 +456,7 @@ ol[role="list"] {
 
 .te-table {
   grid-area: text;
-  margin: 20px auto auto auto;
+  margin-top: 4rem !important;
   padding: 20px;
   border-radius: 1rem;
   background-color: rgba(255, 255, 255, 0.8);
@@ -319,9 +474,9 @@ ol[role="list"] {
 .rare-box {
   position: relative;
   background-color: var(--clr-body-boxes);
-  margin: 50px auto;
+  margin: 0 auto 5rem auto !important;
   width: 100%;
-  padding: 50px 30px 30px 30px;
+  padding: 60px 30px 30px 30px;
   border-radius: 1rem;
   box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
   display: grid;
@@ -344,7 +499,7 @@ ol[role="list"] {
 
 .rare-table {
   grid-area: text;
-  margin: 20px auto auto auto;
+  margin-top: 4rem !important;
   padding: 20px;
   border-radius: 1rem;
   background-color: rgba(255, 255, 255, 0.8);
@@ -364,9 +519,9 @@ ol[role="list"] {
 .new-box {
   position: relative;
   background-color: var(--clr-body-boxes);
-  margin: 50px auto;
+  margin: 0 auto 5rem auto !important;
   width: 100%;
-  padding: 50px 30px 30px 30px;
+  padding: 60px 30px 30px 30px;
   border-radius: 1rem;
   box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
   display: grid;
@@ -389,7 +544,7 @@ ol[role="list"] {
 
 .new-table {
   grid-area: text;
-  margin: 20px auto auto auto;
+  margin-top: 4rem !important;
   padding: 20px;
   border-radius: 1rem;
   background-color: rgba(255, 255, 255, 0.8);
@@ -431,6 +586,9 @@ ol[role="list"] {
 
 .dlb {
   display: grid;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-top: 1rem !important;
 }
 
 .inatbut {
@@ -448,13 +606,13 @@ ol[role="list"] {
 
 
 
+
 /* Credits box styling */
 
 .credits-box {
   position: relative;
   background-color:  rgba(255, 255, 255, 0.8);
-  border-radius: 1rem;
-  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  box-shadow: 0px -3px 1rem rgba(0, 0, 0, 0.4);
   margin: 50px auto;
   width: 100%;
   padding: 30px;
@@ -486,6 +644,75 @@ ol[role="list"] {
 }
 
 
+/* || Footer */
+.footer-box {
+  position: relative;
+  padding: 4rem 2rem 0 2rem;
+  width: 100vw;
+  background-color: var(--clr-footer);
+  box-shadow: 0px -3px 1rem rgba(0, 0, 0, 0.4);
+}
+
+.footer-content {
+  margin: 0 6rem 3rem 6rem !important;
+  display: grid;
+  grid-column-gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.footer-box h2 {
+  font-size: 1.6rem;
+  letter-spacing: 0.05rem;
+  margin-bottom: 1.5rem !important;
+}
+
+.footer-box p {
+  margin-bottom: 0;
+  font-size: 1.3rem;
+  line-height: 2.5rem;
+}
+
+.footer-box a {
+  font-size: 1.4rem;
+  line-height: 3rem;
+  color: black;
+}
+
+.footer-box a:hover {
+  text-decoration: none;
+  color: var(--clr-br-gre);
+}
+
+.footer-content p {
+  margin-bottom: 2rem;
+}
+
+.footer-si p {
+  line-height: 1.5rem !important;
+  font-size: 1.4rem;
+}
+
+.footer-logo {
+  width: 16rem;
+  margin-bottom: 2rem !important;
+}
+
+.copyright {
+  text-align: center;
+  padding: 3rem 0;
+  font-size: 1.4rem !important;
+  border-top: 1px solid gray;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -495,7 +722,7 @@ ol[role="list"] {
 @media screen and (max-width: 1048px) {
   
   .main-container {
-    width: 98% !important;
+    width: 100% !important;
     max-width: 100% !important;
   }
   

@@ -21,60 +21,60 @@ source("email_alerts/email_functions.R")
 start <- format(today() - 7, "%d %B %Y")
 end <- format(today()-1, "%d %B %Y")
 
-## Pull iNaturalist and eBird data
-inat <- inat_recent("1647", "week", "Acadia National Park")
-ebird <- ebird_recent("US-ME-009", "Acadia National Park")
-
-
-## Run the three function and combine rows for iNaturalist
-inat_twf <- bind_rows(inat %>% watchlist_inv(), inat %>% watchlist_te(),
-                         inat %>% watchlist_rn()) %>% 
-  mutate(observed.on = as.character(observed.on))
-
-## Run the three function and combine rows for eBird
-ebd_twf <- bind_rows(ebird %>% watchlist_inv(), ebird %>% watchlist_te(),
-                      ebird %>% watchlist_rn())
-
-
-## Add to the full database and export
-if(nrow(inat_twf) > 0) {
-read.csv("email_alerts/www/datasets/inat_fulldata.csv") %>% 
-  bind_rows(inat_twf) %>% 
-  select(-c(datetime:count)) %>% 
-  write.csv(., "email_alerts/www/datasets/inat_fulldata.csv", row.names = F)
-}
-
-if(nrow(ebd_twf) > 0) {
-read.csv("email_alerts/www/datasets/ebd_fulldata.csv") %>% 
-  bind_rows(ebd_twf) %>% 
-  select(-c(speciesCode:license)) %>% 
-  write.csv(., "email_alerts/www/datasets/ebd_fulldata.csv", row.names = F)
-}
-
-
-## Make a df with 'groups' to add to the data
-groups <- data.frame(iconic.taxon.name = c("Plantae", "Mammalia", "Animalia", "Aves", "Insecta",
-                                 "Reptilia", "Amphibia", "Fungi", "Protozoa", "Chromista",
-                                 "Arachnida", "Mullusca"),
-           groups = c("Plants", "Mammals", "Other animals", "Birds", "Insects", "Reptiles",
-                      "Amphibians", "Fungi and lichens", "Protozoans", "Kelp and seaweeds",
-                      "Spiders", "Mullusks"))
-
-## Combine the two data frames
-final_data <- combine_citsci_data(
-  inat %>% 
-    select(scientific.name, common.name, iconic.taxon.name, observed.on, 
-           place.guess, latitude, longitude, positional.accuracy, user.login, 
-           user.id, captive.cultivated, url, image.url, license), 
-  ebird %>% 
-    select(scientific.name, common.name, iconic.taxon.name, count, observed.on, 
-           place.guess, latitude, longitude, checklist, url), 
-  join = groups)
-
-
-## Run the summary function on the final data
-watchlist_species(final_data, "email_alerts/outputs")
-new_npspecies(final_data, "email_alerts/outputs")
+# ## Pull iNaturalist and eBird data
+# inat <- inat_recent("1647", "week", "Acadia National Park")
+# ebird <- ebird_recent("US-ME-009", "Acadia National Park")
+# 
+# 
+# ## Run the three function and combine rows for iNaturalist
+# inat_twf <- bind_rows(inat %>% watchlist_inv(), inat %>% watchlist_te(),
+#                          inat %>% watchlist_rn()) %>% 
+#   mutate(observed.on = as.character(observed.on))
+# 
+# ## Run the three function and combine rows for eBird
+# ebd_twf <- bind_rows(ebird %>% watchlist_inv(), ebird %>% watchlist_te(),
+#                       ebird %>% watchlist_rn())
+# 
+# 
+# ## Add to the full database and export
+# if(nrow(inat_twf) > 0) {
+# read.csv("email_alerts/www/datasets/inat_fulldata.csv") %>% 
+#   bind_rows(inat_twf) %>% 
+#   select(-c(datetime:count)) %>% 
+#   write.csv(., "email_alerts/www/datasets/inat_fulldata.csv", row.names = F)
+# }
+# 
+# if(nrow(ebd_twf) > 0) {
+# read.csv("email_alerts/www/datasets/ebd_fulldata.csv") %>% 
+#   bind_rows(ebd_twf) %>% 
+#   select(-c(speciesCode:license)) %>% 
+#   write.csv(., "email_alerts/www/datasets/ebd_fulldata.csv", row.names = F)
+# }
+# 
+# 
+# ## Make a df with 'groups' to add to the data
+# groups <- data.frame(iconic.taxon.name = c("Plantae", "Mammalia", "Animalia", "Aves", "Insecta",
+#                                  "Reptilia", "Amphibia", "Fungi", "Protozoa", "Chromista",
+#                                  "Arachnida", "Mullusca"),
+#            groups = c("Plants", "Mammals", "Other animals", "Birds", "Insects", "Reptiles",
+#                       "Amphibians", "Fungi and lichens", "Protozoans", "Kelp and seaweeds",
+#                       "Spiders", "Mullusks"))
+# 
+# ## Combine the two data frames
+# final_data <- combine_citsci_data(
+#   inat %>% 
+#     select(scientific.name, common.name, iconic.taxon.name, observed.on, 
+#            place.guess, latitude, longitude, positional.accuracy, user.login, 
+#            user.id, captive.cultivated, url, image.url, license), 
+#   ebird %>% 
+#     select(scientific.name, common.name, iconic.taxon.name, count, observed.on, 
+#            place.guess, latitude, longitude, checklist, url), 
+#   join = groups)
+# 
+# 
+# ## Run the summary function on the final data
+# watchlist_species(final_data, "email_alerts/outputs")
+# new_npspecies(final_data, "email_alerts/outputs")
 
 
 ## Read in the outputs from the watchlist + new npspecies functions and format for tables
@@ -130,42 +130,45 @@ mapcomb <- rbind(mappest, maprare, mapte, mapnew)
 ```
 
 
+<!-- Top Button -->
+<a href = "#"><img src = "email_alerts/www/img/btt-button.png" alt = "back to top" class = "scrolltotop sttan"></a>
+
+
+
+
 <!-- Header -->
 <div class = "title-box">
-  <div class = "titlemain">
+  <div class = "title-text-box">
+  
+  <div class = "h1 header-text">
   Acadia National Park Managers' Report
   </div>
-  <div class = "titlemain2">
-  From citizen science observations
+  <div class = "h2 header-text">
+  A citizen science early-detection summary
   </div>
-  <div class = "subtitle"> 
+  
+  <div class = "headerp">
+  Welcome to the weekly early detection report of observations submitted by iNaturalist and eBird users. These are all observations submitted over the past week for species that Acadia National Park managers and partners have identified as being of conservation interest. These data for this report comes from two of the largest open source citizen science projects: iNaturalist and eBird. The records included in this report include both casual and research grade observations, so erroneous identifications are possible. Users should double check the identification of species to ensure they are correct.
+  </div>
+  
+  <div class = "header-date"> 
   `r start` - `r end`
   </div>
-</div>
-
-
-
-<!-- Introduction -->
-<div class = "intro-box">
-  <div class = "body-title-box">
-  <i class = "body-box-icon"></i>
-  <h4 class = "body-titles"> Introduction </h4>
-  </div>
-  <div class = "intro-img-box">
-  <a href = "https://www.inaturalist.org/"><img src = "email_alerts/www/img/inat.png" alt = "iNaturalist    logo" class = "inat-logo"></a>
-  <a href = "https://ebird.org/"><img src = "email_alerts/www/img/ebird.png" alt = "eBird logo" class =     "ebird-logo"></a>
-  </div>
-  <div class = "intro-text">
-  Welcome to the weekly report of iNaturalist and eBird records. These are all observations submitted during the last week for species that Acadia National Park managers have identified as being of management interest. 
   
-  These data for this report comes from two of the largest open source citizen science projects: iNaturalist and eBird. The records here are both casual and research grade observations, so erroneous identifications are possible.
   </div>
 </div>
 
 
+
+
+<!-- Body -->
+<div class = "custbody">
 
 <!-- Observations Map -->
 <div class = "map-box">
+  <div class = "body-title-box">
+  <h3 class = "boxtitles"> Explore Species Locations </h3>
+  </div>
   <div>
   `r leaflet_summary(mapcomb)`
   </div>
@@ -176,12 +179,21 @@ mapcomb <- rbind(mappest, maprare, mapte, mapnew)
 <!-- Pests & Invasives -->
 <div class = "pests-box">
   <div class = "body-title-box">
-  <h4 class = "body-titles"> Pest & Invasive Species </h4>
+  <h3 class = "boxtitles"> Invasive Species </h3>
   </div>
-  <img src = "email_alerts/www/img/hwa.jpeg" alt = "A Hemlock tree infested with Hemlock Woolly Adelgid"    class = "pests-img">
+  <img src = "email_alerts/www/img/hwa.jpeg" alt = "A Hemlock tree infested with Hemlock Woolly Adelgid" class = "pests-img">
   <h5 class = "cite"> © Jesse Wheeler </h5>
   <div class = "pests-table shrink-table">
-  `r ifelse(length(pests$scientific.name) > 0, kbl(pests) %>% kable_styling(bootstrap_options = "hover"), paste0("<h3> There were no pest species reported this week. </h3>"))`
+```{r pests-table, results = 'asis', echo = FALSE}
+if (nrow(pests) > 0) {
+  pests %>%
+    kbl(col.names = c("Scientific Name", "Common Name", "Date Observed", "Link")) %>%
+    kable_styling(bootstrap_options = "hover")
+} else {
+  cat("<h3>There were no invasive species reported this week.</h3>")
+}
+```
+  <!-- `r ifelse(length(pests$scientific.name) > 0, kbl(pests) %>% kable_styling(bootstrap_options = "hover"), paste0("<h3> There were no pest species reported this week. </h3>"))` -->
   </div>
 </div>
 
@@ -190,12 +202,20 @@ mapcomb <- rbind(mappest, maprare, mapte, mapnew)
 <!-- Threatened and Endangered -->
 <div class = "te-box">
   <div class = "body-title-box">
-  <h4 class = "body-titles"> Threatened & Endangered Species </h4>
+  <h3 class = "boxtitles"> Threatened & Endangered Species </h3>
   </div>
   <img src = "email_alerts/www/img/rekn.jpeg" alt = "Two Red Knots in flight" class = "te-img">
   <h5 class = "cite"> © Fyn Kynd </h5>
   <div class = "te-table shrink-table">
-  `r ifelse(length(te$scientific.name) > 0, kbl(te) %>% kable_styling(bootstrap_options = "hover"), paste0("<h3> There were no threatened or endangered species reported this week. </h3>"))`
+```{r te-table, results = 'asis', echo = FALSE}
+if (nrow(te) > 0) {
+  te %>%
+    kbl(col.names = c("Scientific Name", "Common Name", "Listing", "Date Observed", "Link")) %>%
+    kable_styling(bootstrap_options = "hover")
+} else {
+  cat("<h3>There were no threatened or endangered species reported this week.</h3>")
+}
+```
   </div>
 </div>
 
@@ -204,12 +224,20 @@ mapcomb <- rbind(mappest, maprare, mapte, mapnew)
 <!-- Rare species -->
 <div class = "rare-box">
   <div class = "body-title-box">
-  <h4 class = "body-titles"> Rare Species </h4>
+  <h3 class = "boxtitles"> Rare Species </h3>
   </div>
   <img src = "email_alerts/www/img/notr.jpeg" alt = "A flowering Nodding Trillium" class = "rare-img">
   <h5 class = "cite" style = "color:white;"> © Andy Fyon </h5>
   <div class = "rare-table shrink-table">
-  `r ifelse(length(rare$scientific.name) > 0, kbl(rare) %>% kable_styling(bootstrap_options = "hover"), paste0("<h3> There were no rare species reported this week. </h3>"))`
+```{r rare-table, results = 'asis', echo = FALSE}
+if (nrow(rare) > 0) {
+  rare %>%
+    kbl(col.names = c("Scientific Name", "Common Name", "Date Observed", "Link")) %>%
+    kable_styling(bootstrap_options = "hover")
+} else {
+  cat("<h3>There were no rare species reported this week.</h3>")
+}
+```
   </div>
 </div>
 
@@ -218,12 +246,20 @@ mapcomb <- rbind(mappest, maprare, mapte, mapnew)
 <!-- New Park Species -->
 <div class = "new-box">
   <div class = "body-title-box">
-  <h4 class = "body-titles"> New Park Species </h4>
+  <h3 class = "boxtitles"> New Park Species </h3>
   </div>
   <img src = "email_alerts/www/img/sacr.jpg" alt = "A something" class = "new-img">
   <h5 class = "cite"> © Kyle Lima </h5>
   <div class = "rare-table shrink-table">
-  `r ifelse(length(newsp$scientific.name) > 0, kbl(newsp) %>% kable_styling(bootstrap_options = "hover"), paste0("<h3> There were no new species to the park reported this week. </h3>"))`
+```{r newsp-table, results = 'asis', echo = FALSE}
+if (nrow(newsp) > 0) {
+  newsp %>%
+    kbl(col.names = c("Scientific Name", "Common Name", "Date Observed", "Link")) %>%
+    kable_styling(bootstrap_options = "hover")
+} else {
+  cat("<h3>There were no new species to the park reported this week.</h3>")
+}
+```
   </div>
 </div>
 
@@ -232,10 +268,10 @@ mapcomb <- rbind(mappest, maprare, mapte, mapnew)
 <!-- Download -->
 <div class = "downloader-box">
   <div class = "body-title-box">
-  <h4 class = "body-titles"> Download Full Datasets </h4>
+  <h3 class = "boxtitles"> Download Full Datasets </h3>
   </div>
   <div class = "dlb">
-  <a href = "https://www.inaturalist.org/"><img src = "email_alerts/www/img/inat.png" alt = "iNaturalist    logo" class = "inat-logo"></a>
+  <a href = "https://www.inaturalist.org/"><img src = "email_alerts/www/img/inat.png" alt = "iNaturalist logo" class = "inat-logo"></a>
 ``` {r echo = FALSE, class.output = "inatbut"}
 read.csv("email_alerts/www/datasets/inat_fulldata.csv") %>%
   download_this(
@@ -248,7 +284,7 @@ read.csv("email_alerts/www/datasets/inat_fulldata.csv") %>%
 ```
   </div>
   <div class = "dlb">
-  <a href = "https://ebird.org/"><img src = "email_alerts/www/img/ebird.png" alt = "eBird logo" class =     "ebird-logo"></a>
+  <a href = "https://ebird.org/"><img src = "email_alerts/www/img/ebird.png" alt = "eBird logo" class = "ebird-logo"></a>
 ``` {r echo = FALSE, class.output = "ebdbut"}
 read.csv("email_alerts/www/datasets/ebd_fulldata.csv") %>%
   download_this(
@@ -256,41 +292,44 @@ read.csv("email_alerts/www/datasets/ebd_fulldata.csv") %>%
     output_extension = ".xlsx",
     button_label = "Download eBird data",
     button_type = "success",
-    has_icon = TRUE,
+    has_icon = F,
     icon = "fa fa-save")
 ```
   </div>
 </div>
 
-
-
-<!-- Credits -->
-<div class = "credits-box">
-  <div>
-  <a href = "https://schoodicinstitute.org/"><img src = "email_alerts/www/img/schoodic_horizontal.png"      alt = "Schoodic Institute at Acadia National Park logo" class = "schoodic-img"></a>
-  
-  Our mission is inspiring science, learning, and community for a changing world.
-  
-  This project was made possible in part by a grant from the National Park Foundation.
-  
-  Background art of Acadia National Park © Ben Tero.
-  
-  © `r year(today())` Schoodic Institute at Acadia National Park
-  </div>
-  <div> 
-  Data Citations: <br>
-  iNaturalist. Available from <a href = "https://www.inaturalist.org/" target =                         "_blank"> https://www.inaturalist.org. </a> `r paste0("Accessed [", today(), "].")`
-  
-  eBird. eBird: An online database of bird distribution and abundance [web application].
-  eBird, Cornell Lab of Ornithology, Ithaca, New York. Available:
-  <a href = "https://www.ebird.org" target = "_blank"> http://www.ebird.org. </a> `r paste("(Accessed:   Date [", today(), "]).")`
-  
-  GBIF.org (14 February 2023) GBIF Occurrence Download https://doi.org/10.15468/dl.pqwpft
-  
-  GBIF.org (14 February 2023) GBIF Occurrence Download https://doi.org/10.15468/dl.hhz84h
-  
-  Michonneau F, Collins M, Chamberlain SA (`r year(today())`). ridigbio: An interface to iDigBio's      search API that allows downloading specimen records. R package https://github.com/iDigBio/ridigbio
-  
-  SCAN. 2023. http//:scan-bugs.org/portal/index.php. Accessed on February 14.
-  </div>
 </div>
+
+
+
+
+
+
+<!-- Footer -->
+<div class = "footer-box">
+<div class = "footer-content">
+<div class = "footer-si">
+  <img src = "email_alerts/www/img/SchoodicInstitute_Horizontal_CMYK.png" role = "img" aria-label = "Schoodic Institute at Acadia National Park logo" class = "footer-logo">
+  <p><i>Our Mission is inspiring science, learning, and community for a changing world.</i></p>
+</div>
+<div>
+  <h2>ABOUT</h2>
+  <p><a href = "https://github.com/Kylelima21/MCHT_early_detection_system" target="_blank">Source code</a></p>
+</div>
+<div>
+  <h2>DATA ACCESS</h2>
+  <p><a href = "https://www.inaturalist.org" target="_blank">iNaturalist</a></p>
+  <p><a href = "http://www.ebird.org" target="_blank">eBird</a></p>
+  <p><a href = "https://www.gbif.org/" target="_blank">GBIF</a></p>
+  <p><a href = "https://www.idigbio.org/" target="_blank">iDigBio</a></p>
+</div>
+<div>
+  <h2>CONTACT</h2>
+  <p>Contact us at klima@schoodicinstitute.org</p>
+  <p><a href = "https://schoodicinstitute.org/" target = "_blank">Visit our website</a></p>
+</div>
+</div>
+<div class = "copyright">
+  <p>&copy; `r format(Sys.Date(), "%Y")` Schoodic Institute</p>
+</div>
+
