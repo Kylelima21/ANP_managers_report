@@ -314,7 +314,7 @@ read.csv("email_alerts/www/datasets/ebd_fulldata.csv") %>%
 </div>
 <div>
   <h2>ABOUT</h2>
-  <p><a href = "https://github.com/Kylelima21/MCHT_early_detection_system" target="_blank">Source code</a></p>
+  <p><a href = "https://github.com/Kylelima21/ANP_managers_report" target="_blank">Source code</a></p>
 </div>
 <div>
   <h2>DATA ACCESS</h2>
