@@ -21,60 +21,60 @@ source("email_alerts/email_functions.R")
 start <- format(today() - 7, "%d %B %Y")
 end <- format(today()-1, "%d %B %Y")
 
-# ## Pull iNaturalist and eBird data
-# inat <- inat_recent("1647", "week", "Acadia National Park")
-# ebird <- ebird_recent("US-ME-009", "Acadia National Park")
-# 
-# 
-# ## Run the three function and combine rows for iNaturalist
-# inat_twf <- bind_rows(inat %>% watchlist_inv(), inat %>% watchlist_te(),
-#                          inat %>% watchlist_rn()) %>% 
-#   mutate(observed.on = as.character(observed.on))
-# 
-# ## Run the three function and combine rows for eBird
-# ebd_twf <- bind_rows(ebird %>% watchlist_inv(), ebird %>% watchlist_te(),
-#                       ebird %>% watchlist_rn())
-# 
-# 
-# ## Add to the full database and export
-# if(nrow(inat_twf) > 0) {
-# read.csv("email_alerts/www/datasets/inat_fulldata.csv") %>% 
-#   bind_rows(inat_twf) %>% 
-#   select(-c(datetime:count)) %>% 
-#   write.csv(., "email_alerts/www/datasets/inat_fulldata.csv", row.names = F)
-# }
-# 
-# if(nrow(ebd_twf) > 0) {
-# read.csv("email_alerts/www/datasets/ebd_fulldata.csv") %>% 
-#   bind_rows(ebd_twf) %>% 
-#   select(-c(speciesCode:license)) %>% 
-#   write.csv(., "email_alerts/www/datasets/ebd_fulldata.csv", row.names = F)
-# }
-# 
-# 
-# ## Make a df with 'groups' to add to the data
-# groups <- data.frame(iconic.taxon.name = c("Plantae", "Mammalia", "Animalia", "Aves", "Insecta",
-#                                  "Reptilia", "Amphibia", "Fungi", "Protozoa", "Chromista",
-#                                  "Arachnida", "Mullusca"),
-#            groups = c("Plants", "Mammals", "Other animals", "Birds", "Insects", "Reptiles",
-#                       "Amphibians", "Fungi and lichens", "Protozoans", "Kelp and seaweeds",
-#                       "Spiders", "Mullusks"))
-# 
-# ## Combine the two data frames
-# final_data <- combine_citsci_data(
-#   inat %>% 
-#     select(scientific.name, common.name, iconic.taxon.name, observed.on, 
-#            place.guess, latitude, longitude, positional.accuracy, user.login, 
-#            user.id, captive.cultivated, url, image.url, license), 
-#   ebird %>% 
-#     select(scientific.name, common.name, iconic.taxon.name, count, observed.on, 
-#            place.guess, latitude, longitude, checklist, url), 
-#   join = groups)
-# 
-# 
-# ## Run the summary function on the final data
-# watchlist_species(final_data, "email_alerts/outputs")
-# new_npspecies(final_data, "email_alerts/outputs")
+## Pull iNaturalist and eBird data
+inat <- inat_recent("1647", "week", "Acadia National Park")
+ebird <- ebird_recent("US-ME-009", "Acadia National Park")
+
+
+## Run the three function and combine rows for iNaturalist
+inat_twf <- bind_rows(inat %>% watchlist_inv(), inat %>% watchlist_te(),
+                         inat %>% watchlist_rn()) %>%
+  mutate(observed.on = as.character(observed.on))
+
+## Run the three function and combine rows for eBird
+ebd_twf <- bind_rows(ebird %>% watchlist_inv(), ebird %>% watchlist_te(),
+                      ebird %>% watchlist_rn())
+
+
+## Add to the full database and export
+if(nrow(inat_twf) > 0) {
+read.csv("email_alerts/www/datasets/inat_fulldata.csv") %>%
+  bind_rows(inat_twf) %>%
+  select(-c(datetime:count)) %>%
+  write.csv(., "email_alerts/www/datasets/inat_fulldata.csv", row.names = F)
+}
+
+if(nrow(ebd_twf) > 0) {
+read.csv("email_alerts/www/datasets/ebd_fulldata.csv") %>%
+  bind_rows(ebd_twf) %>%
+  select(-c(speciesCode:license)) %>%
+  write.csv(., "email_alerts/www/datasets/ebd_fulldata.csv", row.names = F)
+}
+
+
+## Make a df with 'groups' to add to the data
+groups <- data.frame(iconic.taxon.name = c("Plantae", "Mammalia", "Animalia", "Aves", "Insecta",
+                                 "Reptilia", "Amphibia", "Fungi", "Protozoa", "Chromista",
+                                 "Arachnida", "Mullusca"),
+           groups = c("Plants", "Mammals", "Other animals", "Birds", "Insects", "Reptiles",
+                      "Amphibians", "Fungi and lichens", "Protozoans", "Kelp and seaweeds",
+                      "Spiders", "Mullusks"))
+
+## Combine the two data frames
+final_data <- combine_citsci_data(
+  inat %>%
+    select(scientific.name, common.name, iconic.taxon.name, observed.on,
+           place.guess, latitude, longitude, positional.accuracy, user.login,
+           user.id, captive.cultivated, url, image.url, license),
+  ebird %>%
+    select(scientific.name, common.name, iconic.taxon.name, count, observed.on,
+           place.guess, latitude, longitude, checklist, url),
+  join = groups)
+
+
+## Run the summary function on the final data
+watchlist_species(final_data, "email_alerts/outputs")
+new_npspecies(final_data, "email_alerts/outputs")
 
 
 ## Read in the outputs from the watchlist + new npspecies functions and format for tables
@@ -190,7 +190,7 @@ if (nrow(pests) > 0) {
     kbl(col.names = c("Scientific Name", "Common Name", "Date Observed", "Link")) %>%
     kable_styling(bootstrap_options = "hover")
 } else {
-  cat("<h3>There were no invasive species reported this week.</h3>")
+  cat(HTML("<h3>There were no invasive species reported this week.</h3>"))
 }
 ```
   <!-- `r ifelse(length(pests$scientific.name) > 0, kbl(pests) %>% kable_styling(bootstrap_options = "hover"), paste0("<h3> There were no pest species reported this week. </h3>"))` -->
@@ -213,7 +213,7 @@ if (nrow(te) > 0) {
     kbl(col.names = c("Scientific Name", "Common Name", "Listing", "Date Observed", "Link")) %>%
     kable_styling(bootstrap_options = "hover")
 } else {
-  cat("<h3>There were no threatened or endangered species reported this week.</h3>")
+  cat(HTML("<h3>There were no threatened or endangered species reported this week.</h3>"))
 }
 ```
   </div>
@@ -235,7 +235,7 @@ if (nrow(rare) > 0) {
     kbl(col.names = c("Scientific Name", "Common Name", "Date Observed", "Link")) %>%
     kable_styling(bootstrap_options = "hover")
 } else {
-  cat("<h3>There were no rare species reported this week.</h3>")
+  cat(HTML("<h3>There were no rare species reported this week.</h3>"))
 }
 ```
   </div>
@@ -257,7 +257,7 @@ if (nrow(newsp) > 0) {
     kbl(col.names = c("Scientific Name", "Common Name", "Date Observed", "Link")) %>%
     kable_styling(bootstrap_options = "hover")
 } else {
-  cat("<h3>There were no new species to the park reported this week.</h3>")
+  cat(HTML("<h3>There were no new species to the park reported this week.</h3>"))
 }
 ```
   </div>
@@ -278,9 +278,7 @@ read.csv("email_alerts/www/datasets/inat_fulldata.csv") %>%
     output_name = "iNaturalist_watchlist_database",
     output_extension = ".xlsx",
     button_label = "Download iNaturalist data",
-    button_type = "success",
-    has_icon = TRUE,
-    icon = "fa fa-save")
+    button_type = "success")
 ```
   </div>
   <div class = "dlb">
@@ -291,9 +289,7 @@ read.csv("email_alerts/www/datasets/ebd_fulldata.csv") %>%
     output_name = "eBird_watchlist_database",
     output_extension = ".xlsx",
     button_label = "Download eBird data",
-    button_type = "success",
-    has_icon = F,
-    icon = "fa fa-save")
+    button_type = "success")
 ```
   </div>
 </div>
