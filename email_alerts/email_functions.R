@@ -592,11 +592,15 @@ leaflet_summary <- function (x) {
     minLong = min(formap$longitude) - 0.1
     minLat = min(formap$latitude) - 0.1
     
-    map <- leaflet(options = leafletOptions(zoomControl = FALSE)) %>% 
+    acad.bounds <- sf::read_sf("email_alerts/www/acad_boundary/ACAD_ParkBoundary_PY_202004.shp") %>% 
+      st_transform(4326)
+    
+    map <- leaflet(acad.bounds, options = leafletOptions(zoomControl = FALSE)) %>% 
       addProviderTiles(providers$Esri.WorldImagery) %>% 
       #addProviderTiles(providers$Stadia.StamenTonerLines, options = providerTileOptions(opacity = 0.35)) %>% 
       #addProviderTiles(providers$Stamen.TerrainLabels) %>%
       addProviderTiles(providers$CartoDB.PositronOnlyLabels) %>% 
+      addPolygons(weight = 1, color = "lightgreen") %>% 
       addMarkers(formap$longitude, formap$latitude, label = formap$common.name,
                  labelOptions = labelOptions(textsize = "15px"),
                  clusterOptions = markerClusterOptions(),
