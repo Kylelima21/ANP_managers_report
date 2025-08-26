@@ -22,18 +22,22 @@ start <- format(today() - 7, "%d %B %Y")
 end <- format(today()-1, "%d %B %Y")
 
 ## Pull iNaturalist and eBird data
-inat <- inat_recent("1647", "week", "Acadia National Park")
-ebird <- ebird_recent("US-ME-009", "Acadia National Park")
+inat <- inat_recent("17", "week", "Acadia National Park")
+ebird <- ebird_recent("US-ME", "Acadia National Park")
 
 
 ## Run the three function and combine rows for iNaturalist
 inat_twf <- bind_rows(inat %>% watchlist_inv(), inat %>% watchlist_te(),
                          inat %>% watchlist_rn()) %>%
-  mutate(observed.on = as.character(observed.on))
+  mutate(observed.on = as.character(observed.on)) %>%
+  filter(polygonloc == "park") %>%
+  select(-polygonloc)
 
 ## Run the three function and combine rows for eBird
 ebd_twf <- bind_rows(ebird %>% watchlist_inv(), ebird %>% watchlist_te(),
-                      ebird %>% watchlist_rn())
+                      ebird %>% watchlist_rn()) %>%
+  filter(polygonloc == "park") %>%
+  select(-polygonloc)
 
 
 ## Add to the full database and export
@@ -65,29 +69,29 @@ final_data <- combine_citsci_data(
   inat %>%
     select(scientific.name, common.name, iconic.taxon.name, observed.on,
            place.guess, latitude, longitude, positional.accuracy, user.login,
-           user.id, captive.cultivated, url, image.url, license),
+           user.id, captive.cultivated, url, image.url, license, polygonloc),
   ebird %>%
     select(scientific.name, common.name, iconic.taxon.name, count, observed.on,
-           place.guess, latitude, longitude, checklist, url),
+           place.guess, latitude, longitude, checklist, url, polygonloc),
   join = groups)
 
 
 ## Run the summary function on the final data
 watchlist_species(final_data, "email_alerts/outputs")
-new_npspecies(final_data, "email_alerts/outputs")
+new_npspecies(final_data %>% filter(polygonloc == "park"), "email_alerts/outputs")
 
 
 ## Read in the outputs from the watchlist + new npspecies functions and format for tables
-pests <- read.csv("email_alerts/outputs/invasive_pestslist.csv") %>% 
-  select(scientific.name, common.name, observed.on, url) %>% 
+pests <- read.csv("email_alerts/outputs/invasive_pestslist.csv") %>%
+  select(scientific.name, common.name, observed.on, url, polygonloc) %>% 
   mutate(link = glue::glue("[view observation]({url})"),
          link = map(link, gt::md)) %>%
   select(-url) %>% 
   arrange(common.name, observed.on)
 
 
-rare <- read.csv("email_alerts/outputs/rare_specieslist.csv") %>% 
-  select(scientific.name, common.name, observed.on, url) %>% 
+rare <- read.csv("email_alerts/outputs/rare_specieslist.csv") %>%
+  select(scientific.name, common.name, observed.on, url, polygonloc) %>% 
   mutate(link = glue::glue("[view observation]({url})"),
          link = map(link, gt::md)) %>%
   select(-url) %>% 
@@ -95,7 +99,7 @@ rare <- read.csv("email_alerts/outputs/rare_specieslist.csv") %>%
 
 
 te <- read.csv("email_alerts/outputs/te_specieslist.csv") %>% 
-  select(scientific.name, common.name, listing.status, observed.on, url) %>% 
+  select(scientific.name, common.name, listing.status, observed.on, url, polygonloc) %>% 
   mutate(link = glue::glue("[view observation]({url})"),
          link = map(link, gt::md)) %>%
   select(-url) %>% 
@@ -187,6 +191,8 @@ mapcomb <- rbind(mappest, maprare, mapte, mapnew)
 ```{r pests-table, results = 'asis', echo = FALSE}
 if (nrow(pests) > 0) {
   pests %>%
+    filter(polygonloc == "park") %>% 
+    select(-polygonloc) %>% 
     kbl(col.names = c("Scientific Name", "Common Name", "Date Observed", "Link")) %>%
     kable_styling(bootstrap_options = "hover")
 } else {
@@ -210,6 +216,8 @@ if (nrow(pests) > 0) {
 ```{r te-table, results = 'asis', echo = FALSE}
 if (nrow(te) > 0) {
   te %>%
+    filter(polygonloc == "park") %>% 
+    select(-polygonloc) %>% 
     kbl(col.names = c("Scientific Name", "Common Name", "Listing", "Date Observed", "Link")) %>%
     kable_styling(bootstrap_options = "hover")
 } else {
@@ -232,6 +240,8 @@ if (nrow(te) > 0) {
 ```{r rare-table, results = 'asis', echo = FALSE}
 if (nrow(rare) > 0) {
   rare %>%
+    filter(polygonloc == "park") %>% 
+    select(-polygonloc) %>% 
     kbl(col.names = c("Scientific Name", "Common Name", "Date Observed", "Link")) %>%
     kable_styling(bootstrap_options = "hover")
 } else {
@@ -241,6 +251,28 @@ if (nrow(rare) > 0) {
   </div>
 </div>
 
+
+<!-- Buffer Zone Species -->
+<div class = "buff-box">
+  <div class = "body-title-box">
+  <h3 class = "boxtitles"> Buffer Zone Species </h3>
+  </div>
+  <img src = "email_alerts/www/img/bld.png" role = "img" aria-label = "Beech leaves with beech leaf disease" class = "buff-img">
+  <h5 class = "cite"> © Kyle Lima </h5>
+  <div class = "buff-table shrink-table">
+```{r buffer-table, results = 'asis', echo = FALSE}
+if (nrow(pests %>% filter(polygonloc == "park")) > 0) {
+  pests %>%
+    filter(polygonloc == "buffer") %>% 
+    select(-polygonloc) %>% 
+    kbl(col.names = c("Scientific Name", "Common Name", "Date Observed", "Link")) %>%
+    kable_styling(bootstrap_options = "hover")
+} else {
+  cat(HTML("<h3>There were no species reported from the buffer zone this week.</h3>"))
+}
+```
+  </div>
+</div>
 
 
 <!-- New Park Species -->

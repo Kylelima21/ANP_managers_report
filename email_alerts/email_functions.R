@@ -99,7 +99,7 @@ inat_recent <- function(place_id, timespan, parkname) {
                  maxresults = 10000) %>% 
       as_tibble() %>% 
       mutate(common_name = tolower(common_name)) %>% 
-      rename_all( ~ str_replace_all(., "_", "."))
+      rename_all(~str_replace_all(., "_", "."))
     
   }
   
@@ -147,15 +147,17 @@ inat_recent <- function(place_id, timespan, parkname) {
   
   # Select records inside the designated area
   filtered <- filter_nps(inat_obs, parkname, lat = "latitude", long = "longitude")
+  buffered <- filter_to_buffer(inat_obs, lat = "latitude", long = "longitude")
   
+  combined <- bind_rows(filtered, buffered)
   
-  if(length(filtered) >= 1) {
+  if(length(combined) >= 1) {
     message("Data retrieval successful!")
   } else {
     stop("There are no recent iNatuarlist records inside this park.")
   }
   
-  return(filtered) 
+  return(combined) 
   
 }
 
@@ -298,7 +300,8 @@ filter_nps <- function(dat, park, lat, long) {
     output <- sf::st_join(dat2, acad.bounds, left = F) %>% 
       st_set_geometry(., NULL) %>% 
       select(-c(CLASS, Acres, Hectares, SHAPE_Leng, SHAPE_Area)) %>% 
-      select(everything(), latitude = latitude.keep, longitude = longitude.keep)
+      select(everything(), latitude = latitude.keep, longitude = longitude.keep) %>% 
+      mutate(polygonloc = "park")
     
   } else {
     
@@ -332,6 +335,70 @@ filter_nps <- function(dat, park, lat, long) {
   
   return(output)
 }
+
+
+
+
+
+#' @description A simple function that will take a data frame, filter by records to a buffer, and return a
+#' cleaned data frame. IMPORTANT: This function only work for lat long data separated
+#' in two different columns (one for lat and one for long).
+#'
+#' @param df Name of the data frame you have read in.
+#' @param park The quoted name of the national park/monument that you want to filter records by. Requires
+#' name format to be exact. Find a list of the 427 park names at this link: https://rpubs.com/klima21/filternps.
+#' @param lat The quoted column name that is your latitude data.
+#' @param long The quoted column name that is your longitude data.
+#'
+#' @return Returns a data frame of the same structure, but filtered to records inside
+#' the specified park/monument. Some column names may change.
+#'
+#' @example
+#'
+#' # Read in data from working directory
+#' bird.dat <- read.csv("ebird_mappingloc_20220217.csv")
+#'
+#' # Use filter_nps function to filter the bird.dat data frame to records inside Acadia National Park
+#' bird.anp <- filter_nps(bird.dat, "Acadia National Park", lat = "y", long = "x")
+#'
+#' @export
+
+filter_to_buffer <- function(dat, lat, long) {
+  
+  
+  sf::sf_use_s2(FALSE)
+  
+  
+  geo.bounds <- sf::read_sf("email_alerts/www/acad_boundary/ACAD_ParkBoundary_PY_202004.shp") %>%
+    st_transform(3857)
+  
+  geo.bounds_buffer <- st_buffer(geo.bounds, dist = 16093.440) ## 10 miles
+  
+  geo.bounds_buffer_dissolved <- st_union(geo.bounds_buffer)
+  
+  geo.bounds_buffer_only <- st_difference(geo.bounds_buffer_dissolved, geo.bounds) %>% 
+    st_transform(4326)
+  
+  
+  dat2 <- dat %>% 
+    rename(x = paste(long), y = paste(lat)) %>% 
+    mutate(longitude.keep = x,
+           latitude.keep = y) %>% 
+    sf::st_as_sf(., coords = c("x","y"), crs = sf::st_crs(geo.bounds_buffer_only))
+  
+  
+  output <- sf::st_join(dat2, sf::st_as_sf(geo.bounds_buffer_only), left = F) %>% 
+    st_set_geometry(., NULL) %>%
+    #select(-c(CLASS, Acres, Hectares, SHAPE_Leng, SHAPE_Area)) %>%
+    select(everything(), latitude = latitude.keep, longitude = longitude.keep) %>% 
+    mutate(polygonloc = "buffer") %>% 
+    distinct(.keep_all = TRUE)
+  
+  
+  return(output)
+  
+}
+
 
 
 
@@ -396,19 +463,19 @@ watchlist_species <- function(x, output.path) {
   # All T, E species from the last week
   te_specieslist_federal <- x %>% 
     filter(scientific.name %in% fed_te_sp$scientific.name) %>% 
-    select(scientific.name, common.name, observed.on, place.guess, latitude, longitude, url) %>% 
+    select(scientific.name, common.name, observed.on, place.guess, latitude, longitude, url, polygonloc) %>% 
     left_join(fed_te_sp, by = "scientific.name") %>% 
     select(scientific.name, common.name = common.name.x, observed.on, location = place.guess, 
-           listing.status, latitude, longitude, url)
+           listing.status, latitude, longitude, url, polygonloc)
   
   
   # All T, E species from the last week
   te_specieslist_state <- x %>% 
     filter(scientific.name %in% state_te_sp$scientific.name) %>% 
-    select(scientific.name, common.name, observed.on, place.guess, latitude, longitude, url) %>% 
+    select(scientific.name, common.name, observed.on, place.guess, latitude, longitude, url, polygonloc) %>% 
     left_join(state_te_sp, by = "scientific.name") %>% 
     select(scientific.name, common.name = common.name.x, observed.on, 
-           location = place.guess, listing.status, latitude, longitude, url)
+           location = place.guess, listing.status, latitude, longitude, url, polygonloc)
   
   # Combine and export
   all_te_sp <- dplyr::bind_rows(te_specieslist_federal, te_specieslist_state) #%>% 
@@ -437,7 +504,7 @@ watchlist_species <- function(x, output.path) {
     filter(scientific.name %in% rares$scientific.name) %>% 
     arrange(desc(observed.on)) %>%
     dplyr::select(scientific.name, common.name, observed.on, 
-                  location = place.guess, latitude, longitude, url)
+                  location = place.guess, latitude, longitude, url, polygonloc)
   
   
   # Invasives and pests

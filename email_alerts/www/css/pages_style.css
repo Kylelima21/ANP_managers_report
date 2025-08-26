@@ -513,6 +513,48 @@ p {
 
 
 
+/* Buffer box styling */
+
+.buff-box {
+  position: relative;
+  background-color: var(--clr-body-boxes);
+  margin: 0 auto 5rem auto !important;
+  width: 100%;
+  padding: 60px 30px 30px 30px;
+  border-radius: 1rem;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-areas: 
+    "images"
+    "text"
+}
+
+.buff-img {
+  grid-area: images;
+  max-height: 250px;
+  width: 100%;
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.buff-table {
+  grid-area: text;
+  margin-top: 4rem !important;
+  padding: 20px;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
+  color: black;
+  font-size: 18px;
+}
+
+
+
+
+
 
 /* New species box styling */
 
@@ -644,6 +686,11 @@ p {
 }
 
 
+
+
+
+
+
 /* || Footer */
 .footer-box {
   position: relative;
@@ -668,8 +715,9 @@ p {
 
 .footer-box p {
   margin-bottom: 0;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   line-height: 2.5rem;
+  color: black;
 }
 
 .footer-box a {
