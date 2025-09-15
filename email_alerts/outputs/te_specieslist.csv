@@ -1,5 +1,4 @@
 "scientific.name","common.name","observed.on","location","listing.status","latitude","longitude","url","polygonloc"
-"Nycticorax nycticorax","black-crowned night heron",2025-09-02,"Vinalhaven Island, Vinalhaven, ME, US","state endangered",44.0472916667,-68.8343883333,"https://www.inaturalist.org/observations/311110041","buffer"
-"Histrionicus histrionicus","harlequin duck",2025-09-02,"Acadia NP--Schoodic Point","state threatened",44.3324746,-68.0603456,"https://ebird.org/checklist/S271171857","park"
-"Falco peregrinus","peregrine falcon",2025-09-05,"Acadia NP--Precipice Trail","state endangered",44.3547872,-68.1897354,"https://ebird.org/checklist/S271657717","park"
-"Falco peregrinus","peregrine falcon",2025-09-03,"Cadillac Mountain Hawk Watch","state endangered",44.3541374,-68.225616,"https://ebird.org/checklist/S271306317","park"
+"Falco peregrinus","peregrine falcon",2025-09-11,"Acadia NP--Cadillac Mountain","state endangered",44.3534831,-68.2260418,"https://ebird.org/checklist/S272990637","park"
+"Falco peregrinus","peregrine falcon",2025-09-11,"Cadillac Mountain Hawk Watch","state endangered",44.3541374,-68.225616,"https://ebird.org/checklist/S272816160","park"
+"Falco peregrinus","peregrine falcon",2025-09-10,"Acadia NP--Dorr Mountain","state endangered",44.3546645,-68.2149696,"https://ebird.org/checklist/S272733427","park"
