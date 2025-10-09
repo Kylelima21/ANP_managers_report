@@ -645,6 +645,11 @@ p {
   box-shadow: 3px 3px 1rem rgba(0, 0, 0, 0.4);
 }
 
+.fa-save:before {
+    content: none;
+}
+
+
 
 
 
