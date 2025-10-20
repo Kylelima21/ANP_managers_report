@@ -23,64 +23,64 @@ start <- format(today() - 7, "%d %B %Y")
 end <- format(today()-1, "%d %B %Y")
 
 
-## Pull iNaturalist and eBird data
-inat <- inat_recent("17", "week", "Acadia National Park")
-ebird <- ebird_recent("US-ME", "Acadia National Park")
-
-
-## Run the three function and combine rows for iNaturalist
-inat_twf <- bind_rows(inat %>% watchlist_inv(), inat %>% watchlist_te(),
-                         inat %>% watchlist_rn()) %>%
-  mutate(observed.on = as.character(observed.on)) %>%
-  filter(polygonloc == "park") %>%
-  select(-polygonloc)
-
-## Run the three function and combine rows for eBird
-ebd_twf <- bind_rows(ebird %>% watchlist_inv(), ebird %>% watchlist_te(),
-                      ebird %>% watchlist_rn()) %>%
-  filter(polygonloc == "park") %>%
-  select(-polygonloc)
-
-
-## Add to the full database and export
-if(nrow(inat_twf) > 0) {
-read.csv("email_alerts/www/datasets/inat_fulldata.csv") %>%
-  bind_rows(inat_twf) %>%
-  select(-c(datetime:count)) %>%
-  write.csv(., "email_alerts/www/datasets/inat_fulldata.csv", row.names = F)
-}
-
-if(nrow(ebd_twf) > 0) {
-read.csv("email_alerts/www/datasets/ebd_fulldata.csv") %>%
-  bind_rows(ebd_twf) %>%
-  select(-c(speciesCode:license)) %>%
-  write.csv(., "email_alerts/www/datasets/ebd_fulldata.csv", row.names = F)
-}
-
-
-## Make a df with 'groups' to add to the data
-groups <- data.frame(iconic.taxon.name = c("Plantae", "Mammalia", "Animalia", "Aves", "Insecta",
-                                 "Reptilia", "Amphibia", "Fungi", "Protozoa", "Chromista",
-                                 "Arachnida", "Mullusca"),
-           groups = c("Plants", "Mammals", "Other animals", "Birds", "Insects", "Reptiles",
-                      "Amphibians", "Fungi and lichens", "Protozoans", "Kelp and seaweeds",
-                      "Spiders", "Mullusks"))
-
-## Combine the two data frames
-final_data <- combine_citsci_data(
-  inat %>%
-    select(scientific.name, common.name, iconic.taxon.name, observed.on,
-           place.guess, latitude, longitude, positional.accuracy, user.login,
-           user.id, captive.cultivated, url, image.url, license, polygonloc),
-  ebird %>%
-    select(scientific.name, common.name, iconic.taxon.name, count, observed.on,
-           place.guess, latitude, longitude, checklist, url, polygonloc),
-  join = groups)
-
-
-## Run the summary function on the final data
-watchlist_species(final_data, "email_alerts/outputs")
-new_npspecies(final_data %>% filter(polygonloc == "park"), "email_alerts/outputs")
+# ## Pull iNaturalist and eBird data
+# inat <- inat_recent("17", "week", "Acadia National Park")
+# ebird <- ebird_recent("US-ME", "Acadia National Park")
+# 
+# 
+# ## Run the three function and combine rows for iNaturalist
+# inat_twf <- bind_rows(inat %>% watchlist_inv(), inat %>% watchlist_te(),
+#                          inat %>% watchlist_rn()) %>%
+#   mutate(observed.on = as.character(observed.on)) %>%
+#   filter(polygonloc == "park") %>%
+#   select(-polygonloc)
+# 
+# ## Run the three function and combine rows for eBird
+# ebd_twf <- bind_rows(ebird %>% watchlist_inv(), ebird %>% watchlist_te(),
+#                       ebird %>% watchlist_rn()) %>%
+#   filter(polygonloc == "park") %>%
+#   select(-polygonloc)
+# 
+# 
+# ## Add to the full database and export
+# if(nrow(inat_twf) > 0) {
+# read.csv("email_alerts/www/datasets/inat_fulldata.csv") %>%
+#   bind_rows(inat_twf) %>%
+#   select(-c(datetime:count)) %>%
+#   write.csv(., "email_alerts/www/datasets/inat_fulldata.csv", row.names = F)
+# }
+# 
+# if(nrow(ebd_twf) > 0) {
+# read.csv("email_alerts/www/datasets/ebd_fulldata.csv") %>%
+#   bind_rows(ebd_twf) %>%
+#   select(-c(speciesCode:license)) %>%
+#   write.csv(., "email_alerts/www/datasets/ebd_fulldata.csv", row.names = F)
+# }
+# 
+# 
+# ## Make a df with 'groups' to add to the data
+# groups <- data.frame(iconic.taxon.name = c("Plantae", "Mammalia", "Animalia", "Aves", "Insecta",
+#                                  "Reptilia", "Amphibia", "Fungi", "Protozoa", "Chromista",
+#                                  "Arachnida", "Mullusca"),
+#            groups = c("Plants", "Mammals", "Other animals", "Birds", "Insects", "Reptiles",
+#                       "Amphibians", "Fungi and lichens", "Protozoans", "Kelp and seaweeds",
+#                       "Spiders", "Mullusks"))
+# 
+# ## Combine the two data frames
+# final_data <- combine_citsci_data(
+#   inat %>%
+#     select(scientific.name, common.name, iconic.taxon.name, observed.on,
+#            place.guess, latitude, longitude, positional.accuracy, user.login,
+#            user.id, captive.cultivated, url, image.url, license, polygonloc),
+#   ebird %>%
+#     select(scientific.name, common.name, iconic.taxon.name, count, observed.on,
+#            place.guess, latitude, longitude, checklist, url, polygonloc),
+#   join = groups)
+# 
+# 
+# ## Run the summary function on the final data
+# watchlist_species(final_data, "email_alerts/outputs")
+# new_npspecies(final_data %>% filter(polygonloc == "park"), "email_alerts/outputs")
 
 
 ## Read in the outputs from the watchlist + new npspecies functions and format for tables
