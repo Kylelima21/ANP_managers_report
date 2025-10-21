@@ -919,4 +919,48 @@ p {
     margin-top: 30px !important;
   }
   
+  .map-box {
+    padding: 60px 10px 30px;
+  }
+  
+  .pests-box {
+    padding: 60px 10px 30px;
+  }
+  
+  .pests-table {
+    padding: 5px;
+  }
+  
+  .te-box {
+    padding: 60px 10px 30px;
+  }
+  
+  .te-table {
+    padding: 5px;
+  }
+  
+  .rare-box {
+    padding: 60px 10px 30px;
+  }
+  
+  .rare-table {
+    padding: 5px;
+  }
+  
+  .buff-box {
+    padding: 60px 10px 30px;
+  }
+  
+  .buff-table {
+    padding: 5px;
+  }
+  
+  .new-box {
+    padding: 60px 10px 30px;
+  }
+  
+  .new-table {
+    padding: 5px;
+  }
+  
 }
