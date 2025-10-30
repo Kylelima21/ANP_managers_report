@@ -256,7 +256,7 @@ if (nrow(rare) > 0) {
 <!-- Buffer Zone Species -->
 <div class = "buff-box">
   <div class = "body-title-box">
-  <h3 class = "boxtitles"> Buffer Zone Species </h3>
+  <h3 class = "boxtitles"> Buffer Zone Species (10-mile buffer) </h3>
   </div>
   <img src = "email_alerts/www/img/bld.png" role = "img" aria-label = "Beech leaves with beech leaf disease" class = "buff-img">
   <h5 class = "cite"> © Kyle Lima </h5>
