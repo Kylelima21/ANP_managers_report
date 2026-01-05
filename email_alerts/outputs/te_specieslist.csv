@@ -1,1 +1,6 @@
 "scientific.name","common.name","observed.on","location","listing.status","latitude","longitude","url","polygonloc"
+"Histrionicus histrionicus","harlequin duck",2025-12-29,"Winter Harbor, ME, USA","state threatened",44.3313337581,-68.0629706858,"https://www.inaturalist.org/observations/332655817","buffer"
+"Histrionicus histrionicus","harlequin duck",2026-01-04,"Schoodic Loop Rd, Bar Harbor US-ME 44.34973, -68.07291","state threatened",44.34973,-68.072915,"https://ebird.org/checklist/S292413511","park"
+"Histrionicus histrionicus","harlequin duck",2026-01-04,"Acadia NP--Schoodic Point","state threatened",44.3324746,-68.0603456,"https://ebird.org/checklist/S292458302","park"
+"Histrionicus histrionicus","harlequin duck",2026-01-01,"Schoodic Loop Rd, Moose Island section","state threatened",44.338614,-68.051483,"https://ebird.org/checklist/S291655791","park"
+"Alca torda","razorbill",2026-01-01,"Acadia NP--Schoodic Point","state threatened",44.3324746,-68.0603456,"https://ebird.org/checklist/S291640209","park"
