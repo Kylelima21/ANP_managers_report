@@ -5,10 +5,6 @@
 #------------------------------------------------#
 ####           Packages Required              ####
 #------------------------------------------------#
-# Force R to look in the user library
-.libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))
-
-# Package
 library(blastula)
 
 
