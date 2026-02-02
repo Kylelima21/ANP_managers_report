@@ -23,6 +23,7 @@ jobs:
           Rscript -e 'install.packages(
           c("tidyverse", "blastula", "lubridate"),
           dependencies = TRUE,
+          lib = Sys.getenv("R_LIBS_USER"),
           repos = "https://cloud.r-project.org")'
 
       - name: Run email script
