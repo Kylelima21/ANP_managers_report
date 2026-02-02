@@ -16,7 +16,7 @@ jobs:
       - name: Install packages
         run: |
           Rscript -e 'install.packages(
-          c("tidyverse", "blastula", "lubridate"),
+          c("curl", "httr", "tidyverse", "blastula", "lubridate"),
           dependencies = TRUE)'
 
       - name: Run email script
