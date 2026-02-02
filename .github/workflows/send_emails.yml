@@ -1,4 +1,4 @@
-name: Sending NPF Email
+name: Sending Email
 run-name: ${{ github.actor }} is sending the email 🚀
 on:
     schedule:
