@@ -14,8 +14,8 @@ jobs:
           
       - name: Install packages
         run: |
-          R -e 'install.packages("blastula")'
-          R -e 'install.packages("tidyverse")'
+          R -e 'install.packages("blastula", dependencies = T)'
+          R -e 'install.packages("tidyverse", dependencies = T)'
           R -e 'install.packages("lubridate")'
 
           
