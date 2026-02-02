@@ -28,6 +28,12 @@ jobs:
 
       - name: Run email script
         run: Rscript email_alerts/email_sender.R
+      - name: Run email script
+        run: |
+          Rscript -e '.libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths())) 
+          print(.libPaths())
+          source("email_alerts/email_sender.R")'
+
       
       - name: Commit files # Commit changes
         run: |
