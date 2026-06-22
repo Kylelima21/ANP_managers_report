@@ -193,7 +193,7 @@ ebird_recent <- function(ebird_loc, parkname) {
     data <- ebirdregion(loc = ebird_loc, species = code, back = 7, key = "kjh86bnmkpfh") %>% 
       mutate(url = paste0("https://ebird.org/checklist/", subId))
     
-    #coreturn(data)
+    return(data)
   }
   
   
