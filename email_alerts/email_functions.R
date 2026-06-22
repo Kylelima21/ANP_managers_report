@@ -182,21 +182,24 @@ ebird_recent <- function(ebird_loc, parkname) {
   
   # Get code list
   codelist <- ebirdregion(loc = ebird_loc, back = 7, key = "kjh86bnmkpfh") %>% 
-    pull(speciesCode)
-  
+    pull(speciesCode) 
+    
   
   # Create a run function to pull the data for each species in the code list
   run <- function(ebird_loc, code) {
     
+    Sys.sleep(0.25)
+    
     data <- ebirdregion(loc = ebird_loc, species = code, back = 7, key = "kjh86bnmkpfh") %>% 
       mutate(url = paste0("https://ebird.org/checklist/", subId))
     
-    return(data)
+    #coreturn(data)
   }
   
   
   # Map over this function and clean
-  mid <- map2_dfr(ebird_loc, codelist, run) %>% 
+  mid <- #map2_dfr(ebird_loc, codelist, run) %>% 
+    map_dfr(codelist, ~run(ebird_loc, .x)) %>% 
     mutate(iconic.taxon.name = "Aves",
            obsDt = as.Date(obsDt)) %>% 
     rename(scientific.name = sciName, common.name = comName, count = howMany,
