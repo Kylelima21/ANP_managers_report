@@ -1,3 +1,4 @@
+require(httr2)
 require(tidyverse)
 require(rinat)
 require(lubridate)
@@ -13,6 +14,7 @@ require(downloader)
 require(sf)
 require(hashids)
 require(shinyalert)
+require(httr2)
 
 
 ## List of functions
@@ -180,26 +182,52 @@ inat_recent <- function(place_id, timespan, parkname) {
 
 ebird_recent <- function(ebird_loc, parkname) {
   
-  # Get code list
-  codelist <- ebirdregion(loc = ebird_loc, back = 7, key = "kjh86bnmkpfh") %>% 
-    pull(speciesCode) 
+  # Get all species reported in Maine in the last 7 days
+  req <- request(paste0("https://api.ebird.org/v2/data/obs/", ebird_loc, "/recent")) %>%
+    req_headers(`X-eBirdApiToken` = "g5licssn6jng") %>%
+    req_url_query(back = 7)
+  
+  
+  # Create vector of species codes
+  codelist <- req_perform(req) %>%
+    resp_body_json(simplifyVector = TRUE) %>%
+    as_tibble() %>%
+    pull(speciesCode) %>%
+    unique()
     
   
   # Create a run function to pull the data for each species in the code list
-  run <- function(ebird_loc, code) {
+  run_ebirddat <- function(ebird_loc, code) {
     
-    Sys.sleep(0.25)
+    # Slow down requests to avoid hammering the API
+    Sys.sleep(2)
     
-    data <- ebirdregion(loc = ebird_loc, species = code, back = 7, key = "kjh86bnmkpfh") %>% 
+    req <- request(paste0("https://api.ebird.org/v2/data/obs/", ebird_loc, "/recent/", code)) %>%
+      req_headers(`X-eBirdApiToken` = "g5licssn6jng") %>%
+      req_url_query(back = 7) %>%
+      req_retry(max_tries = 5)
+    
+    resp <- req_perform(req)
+    
+    out <- resp_body_json(resp, simplifyVector = TRUE)
+    
+    # Some species could conceivably return nothing
+    if (length(out) == 0) {
+      return(tibble())
+    }
+    
+    
+    data.b <- out %>%
+      as_tibble() %>%
       mutate(url = paste0("https://ebird.org/checklist/", subId))
     
-    return(data)
+    
+    return(data.b)
   }
   
   
   # Map over this function and clean
-  mid <- #map2_dfr(ebird_loc, codelist, run) %>% 
-    map_dfr(codelist, ~run(ebird_loc, .x)) %>% 
+  mid <- map_dfr(codelist, ~ run_ebirddat(ebird_loc, .x)) %>% 
     mutate(iconic.taxon.name = "Aves",
            obsDt = as.Date(obsDt)) %>% 
     rename(scientific.name = sciName, common.name = comName, count = howMany,
@@ -836,6 +864,76 @@ watchlist_inv <- function(x) {
   
 }
 
+
+
+
+
+
+
+
+
+#' Function returns a data frame of recent eBird observations.
+#'
+#' This function takes a recent time span and returns all eBird records from
+#' inside a designated area during that time span.
+#'
+#' @inheritParams None
+#' @return A data frame of recent eBird observations.
+#' @param ebird_loc: An eBird place name as a single string with components separated by hyphens. 
+#' For example, the Hancock County, Maine, USA is "US-ME-009". A full list of codes can be found 
+#' here: https://support.ebird.org/en/support/solutions/articles/48000838205-download-ebird-data
+#' #' @param parkname The quoted name of the national park/monument that you want to filter records by. Requires
+#' name format to be exact. Find a list of the 427 park names at this link: https://rpubs.com/klima21/filternps.
+#' @export
+
+OLD_ebird_recent <- function(ebird_loc, parkname) {
+  
+  # Get code list
+  codelist <- ebirdregion(loc = ebird_loc, back = 7, key = "g5licssn6jng") %>%
+    pull(speciesCode)
+  
+  
+  # Create a run function to pull the data for each species in the code list
+  run <- function(ebird_loc, code) {
+    
+    Sys.sleep(0.25)
+    
+    data <- ebirdregion(loc = ebird_loc, species = code, back = 7, key = "g5licssn6jng") %>%
+      mutate(url = paste0("https://ebird.org/checklist/", subId))
+    
+    return(data)
+  }
+  
+  
+  # Map over this function and clean
+  mid <- #map2_dfr(ebird_loc, codelist, run) %>% 
+    map_dfr(codelist, ~run(ebird_loc, .x)) %>% 
+    mutate(iconic.taxon.name = "Aves",
+           obsDt = as.Date(obsDt)) %>% 
+    rename(scientific.name = sciName, common.name = comName, count = howMany,
+           observed.on = obsDt, place.guess = locName, latitude = lat, 
+           longitude = lng, checklist = subId)
+  
+  
+  # Select records inside the designated area
+  filtered <- filter_nps(mid, parkname, lat = "latitude", long = "longitude")
+  
+  
+  output <- filtered %>% 
+    mutate(source = "eBird",
+           license = NA_character_)
+  
+  
+  if(length(output) >= 1) {
+    message("Data retrieval successful!")
+  } else {
+    stop("There are no recent eBird records inside this park.")
+  }
+  
+  
+  return(output)
+  
+}
 
 
 
