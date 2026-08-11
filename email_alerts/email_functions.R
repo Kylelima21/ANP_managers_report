@@ -216,11 +216,9 @@ ebird_recent <- function(ebird_loc, parkname) {
       return(tibble())
     }
     
-    
     data.b <- out %>%
       as_tibble() %>%
       mutate(url = paste0("https://ebird.org/checklist/", subId))
-    
     
     return(data.b)
   }
@@ -935,5 +933,124 @@ OLD_ebird_recent <- function(ebird_loc, parkname) {
   
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+OLD_watchlist_species <- function(x, output.path) {
+  
+  ## Check to make sure that parameter inputs are correct
+  # output.path
+  if (str_sub(output.path, start = -1) == "/") {
+    stop("Directory path cannot end with '/'")
+  }
+  
+  
+  # Stop this output from showing
+  options(readr.show_col_types = FALSE)
+  
+  
+  # Custom name repair function to be used later
+  custom_name_repair <- function(x) { tolower(gsub(" ", ".", x)) }
+  
+  
+  ### THREATENED/ENDANGERED
+  ## Federal
+  # Read in the file and filter for the T, E, and SC species
+  fed_te_sp <- read_csv("email_alerts/www/datasets/federal_list_maine.csv") %>% 
+    rename_with(tolower, everything()) %>% 
+    select(scientific.name = "scientific name", common.name = "common name",
+           listing.status = "esa listing status") %>% 
+    mutate(level = "federal",
+           listing.status = tolower(listing.status),
+           listing.status = paste0("federally ", listing.status)) %>% 
+    dplyr::select(-level)
+  
+  
+  ## State
+  # Read in the file and filter for the T, E, and SC species
+  state_te_sp <- read_csv("email_alerts/www/datasets/maine_thrt_end_list.csv") %>% 
+    mutate(level = "state",
+           listing.status = tolower(listing.status),
+           listing.status = paste0("state ", listing.status)) %>% 
+    dplyr::select(-level)
+  
+  
+  # All T, E species from the last week
+  te_specieslist_federal <- x %>% 
+    filter(scientific.name %in% fed_te_sp$scientific.name) %>% 
+    select(scientific.name, common.name, observed.on, place.guess, latitude, longitude, url, polygonloc) %>% 
+    left_join(fed_te_sp, by = "scientific.name") %>% 
+    select(scientific.name, common.name = common.name.x, observed.on, location = place.guess, 
+           listing.status, latitude, longitude, url, polygonloc)
+  
+  
+  # All T, E species from the last week
+  te_specieslist_state <- x %>% 
+    filter(scientific.name %in% state_te_sp$scientific.name) %>% 
+    select(scientific.name, common.name, observed.on, place.guess, latitude, longitude, url, polygonloc) %>% 
+    left_join(state_te_sp, by = "scientific.name") %>% 
+    select(scientific.name, common.name = common.name.x, observed.on, 
+           location = place.guess, listing.status, latitude, longitude, url, polygonloc)
+  
+  # Combine and export
+  all_te_sp <- dplyr::bind_rows(te_specieslist_federal, te_specieslist_state) #%>% 
+  # mutate(link = paste0("<a href= ", "'", url, "' target='_blank'>view record here</a>")) %>% 
+  # dplyr::select(-url)
+  
+  write.csv(all_te_sp, paste(output.path, "te_specieslist.csv", sep = "/"), row.names = F)
+  
+  
+  
+  ## RARE, INVASIVE, PESTS
+  # Rare native species list
+  listsp <- read_excel("email_alerts/www/datasets/acad_watchlist_species.xlsx", .name_repair = custom_name_repair) 
+  
+  rares <- listsp %>% 
+    filter(status == "rare native" | status == "insect")
+  
+  invasive_ne <- listsp %>% 
+    filter(status == "invasive not established" |
+             status == "invasive established" |
+             status == "pest disease")
+  
+  
+  # Native but rare
+  rares_obs <- x %>% 
+    filter(scientific.name %in% rares$scientific.name) %>% 
+    arrange(desc(observed.on)) %>%
+    dplyr::select(scientific.name, common.name, observed.on, 
+                  location = place.guess, latitude, longitude, url, polygonloc)
+  
+  
+  # Invasives and pests
+  invasive_sp <- x %>% 
+    filter(scientific.name %in% invasive_ne$scientific.name)
+  
+  inv2 <- listsp %>% 
+    filter(grepl("spp.$", scientific.name)) %>% 
+    mutate(genus = str_remove(scientific.name, "\\s\\w*\\."))
+  
+  invasive_gen <-  x %>% 
+    mutate(genus = str_remove(scientific.name, "\\s\\w*")) %>% 
+    filter(genus %in% inv2$genus) %>% 
+    select(-genus)
+  
+  invasive_obs <- rbind(invasive_sp, invasive_gen) %>% 
+    arrange(desc(observed.on))
+  
+  # Export
+  write.csv(rares_obs, paste(output.path, "rare_specieslist.csv", sep = "/"), row.names = F)
+  write.csv(invasive_obs, paste(output.path, "invasive_pestslist.csv", sep = "/"), row.names = F)
+  
+}
 
 
