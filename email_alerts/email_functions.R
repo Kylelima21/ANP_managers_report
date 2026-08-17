@@ -14,7 +14,6 @@ require(downloader)
 require(sf)
 require(hashids)
 require(shinyalert)
-require(httr2)
 
 
 ## List of functions
