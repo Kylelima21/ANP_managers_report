@@ -1,9 +1,8 @@
 name: Updating Managers Report
 run-name: ${{ github.actor }} is updating the report!
 on:
-  push
-  #schedule:
-    #- cron:  '0 8 * * 1'
+  schedule:
+    - cron:  '0 7 * * 1'
     
 jobs:
   Update-Citsci-Report-Pages:
